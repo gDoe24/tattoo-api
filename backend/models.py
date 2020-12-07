@@ -1,1 +1,118 @@
+import os
+from sqlalchemy import Column, String, Integer, create_engine
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
+import json
 
+database_name = "tattoo_shop"
+database_path = f"postgres://{'localhost:5432'}/{database_name}"
+
+db = SQLAlchemy()
+
+def setup_db(app, database_path=database_path):
+    app.config["SQLALCHEMY_DATABASE_URI"] = database_path
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    db.app = app
+    db.init_app(app)
+    db_drop_and_create_all()
+
+def db_drop_and_create_all():
+    db.drop_all()
+    db.create_all()
+
+
+class Artist(db.Model):
+    __tablename__ = 'artists'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(60), nullable=False)
+    phone = db.Column(db.String(120))
+    styles = db.Column(db.String(120))
+    image_link = db.Column(db.String(500))
+    instagram_link  = db.Column(db.String(500))
+    email = db.Column(db.String(300))
+    # One to Many relationship with appointments
+    appointments = db.relationship('Appointment', backref='artist_appt_id', lazy=True)
+
+    def __init__(self, name, phone, styles, image_link, instagram_link, email, appointments):
+        self.name = name
+        self.phone = phone
+        self.styles = styles
+        self.image_link = image_link
+        self.instagram_link = instagram_link
+        self.email = email
+        self.appointments = appointments
+
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+    
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    def format(self):
+        return {
+                'id': self.id,
+                'name': self.name,
+                'phone': self.phone,
+                'styles': self.styles,
+                'email': self.email
+                }
+
+class Client(db.Model):
+    __tablename__ = 'clients'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(60), nullable=False)
+    phone = db.Column(db.String(120))
+    email = db.Column(db.String(240))
+    address = db.Column(db.String(240))
+    # One To Many relationship with appointments
+    appointments = db.relationship('Appoinment', backref='client_appt_id', lazy=True)
+
+    def __init__(self, name, phone, email, address, appointments):
+        self.name = name
+        self.phone = phone
+        self.email = email
+        self.address = address
+        self.appointments = appointments
+        
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    def format(self):
+        return {
+                'id': self.id,
+                'name': self.name,
+                'email': self.email,
+                'appointments': self.appointments
+                }
+
+class Appointment(db.Model):
+    
+    id = db.Column(db.Integer, primary_key=True)
+    client = db.Column(db.Integer, db.ForeignKey("Client.id"))
+    artist = db.Column(db.Integer, db.ForeignKey("Artist.id"))
+    appointment_date = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def format(self):
+        artist = Artist.query.filter(Artist.id == self.artist.id).one_or_none()
+        client = Client.query.filter(Client.id == self.client.id).one_or_none()
+        return {
+                'id': self.id,
+                'artist': artist.name,
+                'client': client.name,
+                'appointment_date': self.appointment_date
+        }
