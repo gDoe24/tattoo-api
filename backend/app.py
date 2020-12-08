@@ -2,21 +2,26 @@ import os
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+import json
+from models import setup_db, Artist, Client, Appointment
 
-from models import setup_db
 
+# Primary handler of the application
+# Contains Endpoints, CORS, Errors
 def create_app(test_config=None):
-  # create and configure the app
-  app = Flask(__name__)
-  setup_db(app)
 
-  CORS(app, resources={r"/api/*": {"origins": "*"}})
+    # create and configure the app, database, and CORS headers
+    app = Flask(__name__)
+    setup_db(app)
 
-  @app.route('/')
-  def index():
-      return "Hello Motto"
+    CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-  return app
+    @app.route('/')
+    def index():
+        return "Hello Motto"
+
+    return app
+
 
 APP = create_app()
 
