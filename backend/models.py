@@ -98,8 +98,7 @@ class Client(db.Model):
         return {
                 'id': self.id,
                 'name': self.name,
-                'email': self.email,
-                'appointments': self.appointments
+                'email': self.email
                 }
 
 
