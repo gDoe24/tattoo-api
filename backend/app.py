@@ -41,6 +41,9 @@ def create_app(test_config=None):
     def index():
         return "Hello Motto"
 
+    '''
+    GET
+    '''
     # Endpoint to GET all artists
     @app.route('/api/artists')
     def all_artists():
@@ -103,6 +106,44 @@ def create_app(test_config=None):
         return jsonify({
                         'success': True,
                         'client': formatted_client
+                        })
+
+    '''
+    CREATE
+    '''
+    # Post endpoint for creating artists
+    @app.route('/api/artists', methods=['POST'])
+    def create_artist():
+        body = request.get_json()
+        name = body.get('name')
+        phone = body.get('phone', '')
+        styles = body.get('styles', '')
+        image_link = body.get('image_link', '')
+        instagram_link = body.get('instagram_link', '')
+        email = body.get('email', '')
+
+        new_artist = Artist(
+                            name=name,
+                            phone=phone,
+                            styles=styles,
+                            image_link=image_link,
+                            instagram_link=instagram_link,
+                            email=email
+                            )
+
+        try:
+            new_artist.insert()
+        except:
+            abort(422)
+
+        posted_artist = Artist.query.filter(Artist.name == new_artist.name).all()[-1]
+        if posted_artist is None:
+            abort(404)
+
+        formatted_artist = posted_artist.format()
+        return jsonify({
+                        'success': True,
+                        'artist': formatted_artist
                         })
 
     return app
