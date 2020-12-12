@@ -7,6 +7,18 @@ from models import setup_db, Artist, Client, Appointment
 
 
 
+CLIENTS_PER_PAGE = 10
+# Paginate Clients
+def paginate_clients(request, clients):
+    page = request.args.get('page', 1, type=int)
+    start = (page - 1)*CLIENTS_PER_PAGE
+    end = start + CLIENTS_PER_PAGE
+
+    format_clients = [client.format() for client in clients]
+    current_clients = format_clients[start:end]
+
+    return current_clients
+
 # Primary handler of the application
 # Contains Endpoints, CORS, Errors
 def create_app(test_config=None):
@@ -60,11 +72,18 @@ def create_app(test_config=None):
     # return all clients formatted
     @app.route('/api/clients')
     def all_clients():
-        formatted_clients = [client.format() for client in Client.query.all()]
+
+        clients = Client.query.all()
+        size = len(clients)
+        if size == 0:
+            abort(404)
+
+        formatted_clients = paginate_clients(request, clients)
+
         return jsonify({
                         'success': True,
                         'clients': formatted_clients,
-                        'total_clients': len(formatted_clients)
+                        'total_clients': size
                         })
 
     # Return a single client according to client id
