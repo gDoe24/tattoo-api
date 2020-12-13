@@ -1,7 +1,7 @@
 import os
 import unittest
 import json
-import datetime
+from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 
 from app import create_app
@@ -93,6 +93,7 @@ class TattooShopTestCase(unittest.TestCase):
         self.assertEqual(data['success'], True)
         self.assertTrue(data['artist']['id'])
         self.assertEqual(data['artist']['name'], payload['name'])
+        self.assertTrue(data['total_artists'])
 
     def test_create_client(self):
         # Test post request for client endpoint returns:
@@ -103,13 +104,14 @@ class TattooShopTestCase(unittest.TestCase):
                    'email': '',
                    'address': '',
                    }
-        res = self.client.post('/api/clients', json=payload)
+        res = self.client().post('/api/clients', json=payload)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
         self.assertTrue(data['client']['id'])
         self.assertEqual(data['client']['name'], payload['name'])
+        self.assertTrue(data['total_clients'])
 
     def test_create_appointment(self):
         # Test post request for appointment endpoint returns:
@@ -117,9 +119,9 @@ class TattooShopTestCase(unittest.TestCase):
         payload = {
                    'client': 1,
                    'artist': 1,
-                   'appointment_date': datetime.datetime(2021, 3, 6, 12, 30)
+                   'appointment_date': datetime(2021, 3, 6, 12, 30)
                    }
-        res = self.client.post('/api/appointments', json=payload)
+        res = self.client().post('/api/appointments', json=payload)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
