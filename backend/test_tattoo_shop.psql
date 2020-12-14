@@ -97,23 +97,23 @@ ALTER TABLE public.clients_id_seq OWNER TO postgres;
 ALTER SEQUENCE public.clients_id_seq OWNED BY public.clients.id;
 
 --
--- Name: appointments; Type TABLE; Schema: public;
+-- Name: appointment; Type TABLE; Schema: public;
 --
 
-CREATE TABLE public.appointments (
+CREATE TABLE public.appointment (
     id integer NOT NULL,
     artist integer,
     client integer,
     appointment_date DATE NOT NULL DEFAULT CURRENT_DATE
 );
 
-ALTER TABLE public.appointments OWNER TO postgres;
+ALTER TABLE public.appointment OWNER TO postgres;
 
 --
--- Name: appointments_id_seq; Type: SEQUENCE; Schema: public;
+-- Name: appointment_id_seq; Type: SEQUENCE; Schema: public;
 --
 
-CREATE SEQUENCE public.appointments_id_seq
+CREATE SEQUENCE public.appointment_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -121,7 +121,7 @@ CREATE SEQUENCE public.appointments_id_seq
     NO MAXVALUE
     CACHE 1;
 
-ALTER TABLE public.appointments_id_seq OWNER TO postgres;
+ALTER TABLE public.appointment_id_seq OWNER TO postgres;
 
 
 --
@@ -141,7 +141,7 @@ ALTER TABLE ONLY public.clients ALTER COLUMN id SET DEFAULT nextval('public.clie
 -- Name: clients id; Type: DEFAULT; Schema: public; Owner: caryn
 --
 
-ALTER TABLE ONLY public.appointments ALTER COLUMN id SET DEFAULT nextval('public.appointments_id_seq'::regclass);
+ALTER TABLE ONLY public.appointment ALTER COLUMN id SET DEFAULT nextval('public.appointment_id_seq'::regclass);
 
 --
 -- Data for Name: artists; Type: TABLE DATA; Schema: public;
@@ -162,7 +162,7 @@ COPY public.clients (id, name, email, phone, address) FROM stdin;
 5	Jalen	NULL	NULL	NULL
 \.
 
-COPY public.appointments (id, artist, client, appointment_date) FROM stdin;
+COPY public.appointment (id, artist, client, appointment_date) FROM stdin;
 1	1	1	2021-03-06
 2	2	2	2021-07-04
 3	3	2	2021-08-09
@@ -182,10 +182,10 @@ SELECT pg_catalog.setval('public.artists_id_seq', 4, true);
 SELECT pg_catalog.setval('public.clients_id_seq', 5, true);
 
 --
--- Name: appointments_id_seq; Type: SEQUENCE SET; Schema: public;
+-- Name: appointment_id_seq; Type: SEQUENCE SET; Schema: public;
 --
 
-SELECT pg_catalog.setval('public.appointments_id_seq', 4, true);
+SELECT pg_catalog.setval('public.appointment_id_seq', 4, true);
 
 --
 -- Name: artists artists_pkey; Type: CONSTRAINT; Schema: public;
@@ -202,20 +202,20 @@ ALTER TABLE ONLY public.clients
     ADD CONSTRAINT clients_pkey PRIMARY KEY (id);
 
 --
--- Name: appointments appointments_pkey; Type: CONSTRAINT; Schema: public;
+-- Name: appointment appointment_pkey; Type: CONSTRAINT; Schema: public;
 --
 
-ALTER TABLE ONLY public.appointments
-    ADD CONSTRAINT appointments_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.appointment
+    ADD CONSTRAINT appointment_pkey PRIMARY KEY (id);
 
 --
 -- Name: clients category; Type: FK CONSTRAINT; Schema: public;
 --
 
-ALTER TABLE ONLY public.appointments
+ALTER TABLE ONLY public.appointment
     ADD CONSTRAINT artist FOREIGN KEY (artist) REFERENCES public.artists(id) ON UPDATE CASCADE ON DELETE SET NULL;
 
-ALTER TABLE ONLY public.appointments
+ALTER TABLE ONLY public.appointment
     ADD CONSTRAINT client FOREIGN KEY (client) REFERENCES public.clients(id) ON UPDATE CASCADE ON DELETE SET NULL;
 
 

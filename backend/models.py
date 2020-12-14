@@ -121,11 +121,11 @@ class Appointment(db.Model):
         db.session.commit()
 
     def format(self):
-        artist = Artist.query.filter(Artist.id == self.artist.id).one_or_none()
-        client = Client.query.filter(Client.id == self.client.id).one_or_none()
+        artist = Artist.query.filter(Artist.id == self.artist).one_or_none()
+        client = Client.query.filter(Client.id == self.client).one_or_none()
         return {
                 'id': self.id,
-                'artist': artist.name,
-                'client': client.name,
+                'artist': artist.id,
+                'client': client.id,
                 'appointment_date': self.appointment_date
                 }

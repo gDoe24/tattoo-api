@@ -40,7 +40,9 @@ def create_app(test_config=None):
 
     @app.route('/')
     def index():
-        return "Hello Motto"
+        return jsonify({
+            'date': datetime(2021, 3, 6, 12, 30)
+        })
 
     '''
     GET
@@ -191,15 +193,11 @@ def create_app(test_config=None):
     @app.route('/api/appointments', methods=['POST'])
     def create_appointment():
         body = request.get_json()
-        artist_id = body['artist']
-        client_id = body['client']
-        appointment_date = datetime(body['appointment_date'])
+        artist_id = int(body['artist'])
+        client_id = int(body['client'])
+        appointment_date = datetime.strptime(body['appointment_date'], "%a, %d %b %Y %I:%M:%S %Z")
 
-        new_appt = Appointment(
-                                client=client_id,
-                                artist=artist_id,
-                                appointment_date=appointment_date
-                              )
+        new_appt = Appointment(client=client_id, artist=artist_id, appointment_date=appointment_date)
 
         try:
             new_appt.insert()
@@ -215,7 +213,7 @@ def create_app(test_config=None):
                                                         Appointment.client == new_appt.client
                                                         ).filter(
                                                             Appointment.appointment_date == new_appt.appointment_date
-                                                        ).query_by(Appointment.id).all()[-1]
+                                                        ).order_by(Appointment.id).all()[-1]
         if posted_appt is None:
             abort(404)
         formatted_appt = posted_appt.format()
