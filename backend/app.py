@@ -45,7 +45,7 @@ def create_app(test_config=None):
         })
 
     '''
-    GET Endpoints
+    GET Endpoints for Artist, Client, Appointment
     '''
     # Endpoint to GET all artists
     @app.route('/api/artists')
@@ -122,7 +122,7 @@ def create_app(test_config=None):
                         })
 
     '''
-    POST Endpoints
+    POST Endpoints for Artist, Client, Appointment
     '''
     # Post endpoint for creating artists
     @app.route('/api/artists', methods=['POST'])
@@ -231,7 +231,7 @@ def create_app(test_config=None):
                         })
 
     '''
-    PATCH Endpoints
+    PATCH Endpoints for Artist, Client, Appointment
     '''
 
     # Patch endpoint for updating an artist
@@ -312,6 +312,10 @@ def create_app(test_config=None):
                         'success': True,
                         'appointment': formatted_appt
                         })
+
+    '''
+    DELETE Endpoints for Artist, Client, Appointment
+    '''
 
     return app
 

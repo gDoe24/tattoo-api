@@ -202,6 +202,42 @@ class TattooShopTestCase(unittest.TestCase):
         self.assertEqual(datetime.strptime(data['appointment']['appointment_date'], "%a, %d %b %Y %I:%M:%S %Z"),
                          payload['appointment_date']
                          )
+
+    '''
+    Test DELETE Endpoints for artists, clients, appointments
+    '''
+    def test_delete_artist(self):
+        # Test sending a delete method for an existing artist returns:
+        # id of the deleted artist and 200 OK
+        artist_id = Artist.query.all()[-1].id
+        res = self.client().delete(f"/api/artists/{artist_id}")
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual(data['deleted_artist_id'], artist_id)
+
+    def test_delete_client(self):
+        # Test sending a delete method for an existing client returns:
+        # id of the deleted client and 200 OK
+        client_id = Client.query.all()[-1].id
+        res = self.client().delete(f"/api/clients/{client_id}")
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual(data['deleted_client_id'], client_id)
+
+    def test_delete_appointment(self):
+        # Test sending a delete method for an existing appointment returns:
+        # id of the deleted appointment and 200 OK
+        appt_id = Appointment.query.all()[-1].id
+        res = self.client().delete(f"/api/appointments/{appt_id}")
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual(data['deleted_appointment_id'], appt_id)
         
     '''
     Test Errors for GET Endpoints for Artist, Client, Appointment
@@ -229,6 +265,31 @@ class TattooShopTestCase(unittest.TestCase):
         pass
 
     def test_create_appointment_error(self):
+        pass
+    '''
+    '''
+    Test Errors for PATCH Endpoints for Artist, Client, Appointment
+
+    def test_update_artist_error(self):
+        pass
+
+    def test_update_client_error(self):
+        pass
+
+    def test_update_appointment_error(self):
+        pass
+    '''
+
+    '''
+    Test Errors for DELETE Endpoints for Artist, Client, Appointment
+
+    def test_delete_artist_error(self):
+        pass
+
+    def test_delete_client_error(self):
+        pass
+
+    def test_delete_appointment_error(self):
         pass
     '''
 
