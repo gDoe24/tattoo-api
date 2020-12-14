@@ -209,7 +209,7 @@ class TattooShopTestCase(unittest.TestCase):
     def test_delete_artist(self):
         # Test sending a delete method for an existing artist returns:
         # id of the deleted artist and 200 OK
-        artist_id = Artist.query.all()[-1].id
+        artist_id = Artist.query.order_by(Artist.id).all()[-1].id
         res = self.client().delete(f"/api/artists/{artist_id}")
         data = json.loads(res.data)
 
@@ -221,7 +221,7 @@ class TattooShopTestCase(unittest.TestCase):
     def test_delete_client(self):
         # Test sending a delete method for an existing client returns:
         # id of the deleted client and 200 OK
-        client_id = Client.query.all()[-1].id
+        client_id = Client.query.order_by(Client.id).all()[-1].id
         res = self.client().delete(f"/api/clients/{client_id}")
         data = json.loads(res.data)
 
@@ -233,7 +233,7 @@ class TattooShopTestCase(unittest.TestCase):
     def test_delete_appointment(self):
         # Test sending a delete method for an existing appointment returns:
         # id of the deleted appointment and 200 OK
-        appt_id = Appointment.query.all()[-1].id
+        appt_id = Appointment.query.order_by(Appointment.id).all()[-1].id
         res = self.client().delete(f"/api/appointments/{appt_id}")
         data = json.loads(res.data)
 
@@ -244,19 +244,56 @@ class TattooShopTestCase(unittest.TestCase):
         
     '''
     Test Errors for GET Endpoints for Artist, Client, Appointment
-    
-    def test_get_all_artists_error(self):
-        pass
-
-    def test_get_artist_by_id_error(self):
-        pass
-
-    def test_get_all_clients_error(self):
-        pass
-
-    def test_get_client_by_id_error(self):
-        pass
     '''
+    # Test a request for bad url returns 404 message
+    def test_get_all_artists_error(self):
+
+        res = self.client().get('/artists')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data['success'], False)
+        self.assertTrue(data['message'])
+
+    # Test a request for artist that does not exist returns 404
+    def test_get_artist_by_id_error(self):
+
+        res = self.client().get('/api/artists/10000')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data['success'], False)
+        self.assertTrue(data['message'])
+
+    # Test request for clients page that does not exist returns 404
+    def test_get_all_clients_error(self):
+        
+        res = self.client().get('/api/clients?page=1000')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data['success'], False)
+        self.assertTrue(data['message'])
+
+    # Test request for client that does not exist returns 404
+    def test_get_client_by_id_error(self):
+        
+        res = self.client().get('/api/clients/10000')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data['success'], False)
+        self.assertTrue(data['message'])
+    
+    # Test request for appointment that does not exist returns 404
+    def test_get_appointment_by_id_error(self):
+        
+        res = self.client().get('/api/appointments/10000')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data['success'], False)
+        self.assertTrue(data['message'])
 
     '''
     Test Errors for POST Endpoints for Artist, Client, Appointment

@@ -61,9 +61,8 @@ def create_app(test_config=None):
     @app.route('/api/artists/<artist_id>')
     def single_artist(artist_id):
         
-        try:
-            artist = Artist.query.get(artist_id)
-        except:
+        artist = Artist.query.get(artist_id)
+        if artist is None:
             abort(404)
 
         formatted_artist = artist.format()
@@ -82,6 +81,8 @@ def create_app(test_config=None):
             abort(404)
 
         formatted_clients = paginate_clients(request, clients)
+        if len(formatted_clients) == 0:
+            abort(404)
 
         return jsonify({
                         'success': True,
@@ -93,9 +94,8 @@ def create_app(test_config=None):
     @app.route('/api/clients/<client_id>')
     def single_client(client_id):
         
-        try:
-            client = Client.query.get(client_id)
-        except:
+        client = Client.query.get(client_id)
+        if client is None:
             abort(404)
 
         formatted_client = client.format()
@@ -109,9 +109,9 @@ def create_app(test_config=None):
     @app.route('/api/appointments/<appt_id>')
     def single_appointment(appt_id):
 
-        try:
-            appt = Appointment.query.get(appt_id)
-        except:
+        
+        appt = Appointment.query.get(appt_id)
+        if appt is None:
             abort(404)
 
         formatted_appt = appt.format()
@@ -367,14 +367,52 @@ def create_app(test_config=None):
             appt.delete()
         except:
             abort(422)
-        now = datetime.utcnow
-        total_upcoming_appointments = Appointment.query.count()
+        now = datetime.now()
+        upcoming_appointments = Appointment.query.filter(
+                                                         Appointment.appointment_date > now
+                                                        ).all()
 
         return jsonify({
                         'success': True,
                         'deleted_appointment_id': appt.id,
-                        'total_upcoming_appointments': total_upcoming_appointments
+                        'total_upcoming_appointments': len(upcoming_appointments)
                         })
+
+    '''
+    Error Handlers
+    '''
+    @app.errorhandler(400)
+    def bad_request(error):
+        return jsonify({
+          'success': False,
+          'error': 400,
+          'message': 'Bad Request'
+        }), 400
+
+    @app.errorhandler(404)
+    def not_found(error):
+        return jsonify({
+          'success': False,
+          'error': 404,
+          'message': 'Resource Not Found',
+        }), 404
+
+    @app.errorhandler(422)
+    def unprocessable_request(error):
+        return jsonify({
+          'success': False,
+          'error': 422,
+          'message': 'Unprocessable Request'
+        }), 422
+
+    @app.errorhandler(500)
+    def unprocessable_request(error):
+        return jsonify({
+          'success': False,
+          'error': 500,
+          'message': 'Internal Server Error'
+        }), 500
+
 
     return app
 
