@@ -193,8 +193,8 @@ def create_app(test_config=None):
     @app.route('/api/appointments', methods=['POST'])
     def create_appointment():
         body = request.get_json()
-        artist_id = int(body['artist'])
-        client_id = int(body['client'])
+        artist_id = body['artist']
+        client_id = body['client']
         appointment_date = datetime.strptime(body['appointment_date'], "%a, %d %b %Y %I:%M:%S %Z")
 
         new_appt = Appointment(client=client_id, artist=artist_id, appointment_date=appointment_date)
@@ -208,11 +208,9 @@ def create_app(test_config=None):
                             })
 
         posted_appt = Appointment.query.filter(
-                                                Appointment.artist == new_appt.artist
+                                               Appointment.artist == new_appt.artist
                                                ).filter(
-                                                        Appointment.client == new_appt.client
-                                                        ).filter(
-                                                            Appointment.appointment_date == new_appt.appointment_date
+                                                        Appointment.appointment_date == new_appt.appointment_date
                                                         ).order_by(Appointment.id).all()[-1]
         if posted_appt is None:
             abort(404)

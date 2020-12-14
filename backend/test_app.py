@@ -75,6 +75,21 @@ class TattooShopTestCase(unittest.TestCase):
         self.assertEqual(data['success'], True)
         self.assertEqual(data['client']['id'], 2)
 
+    def test_get_appointment_by_id(self):
+        # Test GET appointment according to appt id returns:
+        # appt id and 200 OK
+
+        res = self.client().get('/api/appointments/2')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual(data['appointment']['id'], 2)
+
+    '''
+    Test POST Endpoints for Artist, Client, Appointment
+    '''
+
     def test_create_artist(self):
         # Test post request for artist endpoint returns:
         # new artist attributes and 200 OK status
@@ -124,11 +139,66 @@ class TattooShopTestCase(unittest.TestCase):
         res = self.client().post('/api/appointments', json=payload)
         data = json.loads(res.data)
 
+        last_appt = Appointment.query.all()[-1].id
+
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
-        self.assertTrue(data['appointment']['id'])
+        self.assertEqual(data['appointment']['id'], last_appt)
         self.assertEqual(data['appointment']['artist'], payload['artist'])
         self.assertEqual(data['appointment']['client'], payload['client'])
+
+    '''
+    Test PATCH Endpoints for Artist, Client, Appointment
+    '''
+
+    def test_update_artist(self):
+        # Test updating an existing artist returns: 
+        # new artist and 200 OK
+        payload = {
+                    'phone': '901-212-4321',
+                    'email': 'creative_genius@aol.com'
+                   }
+
+        res = self.client().patch('/api/artists/2', json=payload)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual(data['artist']['id'], 2)
+        self.assertEqual(data['artist']['phone'], payload['phone'])
+        self.assertEqual(data['artist']['email'], payload['email'])
+
+    def test_update_client(self):
+        # Test updating an existing client returns:
+        # new client and 200 OK
+        payload = {
+                    'phone': '770-231-4234',
+                    'email': 'simplord12@gmail.com'
+                    }
+        res = self.client().patch('/api/clients/2', json=payload)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual(data['client']['id'], 2)
+        self.assertEqual(data['client']['phone'], payload['phone'])
+        self.assertEqual(data['client']['email'], payload['email'])
+
+    def test_update_appointment(self):
+        # Test updating an exisiting appointment returns:
+        # new appointment and 200 OK
+        payload = {
+                    "appointment_date": datetime(2021, 8, 24, 2, 30)
+                    }
+        res = self.client().patch('/api/appointments/1', json=payload)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual(data['appointment']['id'], 1)
+        self.assertEqual(data['appointment']['appointment_date'],
+                         payload['appointment_date']
+                         )
         
     '''
     Test Errors for GET Endpoints for Artist, Client, Appointment
@@ -143,6 +213,19 @@ class TattooShopTestCase(unittest.TestCase):
         pass
 
     def test_get_client_by_id_error(self):
+        pass
+    '''
+
+    '''
+    Test Errors for POST Endpoints for Artist, Client, Appointment
+
+    def test_create_artist_error(self):
+        pass
+
+    def test_create_client_error(self):
+        pass
+
+    def test_create_appointment_error(self):
         pass
     '''
 
