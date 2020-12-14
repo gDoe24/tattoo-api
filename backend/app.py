@@ -35,7 +35,7 @@ def create_app(test_config=None):
         response.headers.add('ACCESS-CONTROL-ALLOW-HEADERS',
                              'Content-Type,Authorization,true')
         response.headers.add('ACCESS-CONTROL-ALLOW-METHODS',
-                             'POST,GET,PATCH,DELETE,PUT')
+                             'POST,GET,PATCH,DELETE')
         return response
 
     @app.route('/')
@@ -316,6 +316,65 @@ def create_app(test_config=None):
     '''
     DELETE Endpoints for Artist, Client, Appointment
     '''
+
+    # DELETE endpoint for a single artist
+    @app.route('/api/artists/<artist_id>', methods=['DELETE'])
+    def delete_artist(artist_id):
+
+        artist = Artist.query.get(artist_id)
+        if artist is None:
+            abort(404)
+        try:
+            artist.delete()
+        except:
+            abort(422)
+
+        total_artists = Artist.query.count()
+
+        return jsonify({
+                        'success': True,
+                        'deleted_artist_id': artist.id,
+                        'total_artists': total_artists
+                        })
+
+    # DELETE endpoint for a single client
+    @app.route('/api/clients/<client_id>', methods=['DELETE'])
+    def delete_client(client_id):
+        client = Client.query.get(client_id)
+        if client is None:
+            abort(404)
+        try:
+            client.delete()
+        except:
+            abort(422)
+
+        total_clients = Client.query.count()
+
+        return jsonify({
+                        'success': True,
+                        'deleted_client_id': client.id,
+                        'total_clients': total_clients
+                        })
+
+    # DELETE endpoint for a single appointment
+    @app.route('/api/appointments/<appt_id>', methods=['DELETE'])
+    def delete_appointment(appt_id):
+
+        appt = Appointment.query.get(appt_id)
+        if appt is None:
+            abort(404)
+        try:
+            appt.delete()
+        except:
+            abort(422)
+        now = datetime.utcnow
+        total_upcoming_appointments = Appointment.query.count()
+
+        return jsonify({
+                        'success': True,
+                        'deleted_appointment_id': appt.id,
+                        'total_upcoming_appointments': total_upcoming_appointments
+                        })
 
     return app
 

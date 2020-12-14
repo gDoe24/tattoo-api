@@ -216,6 +216,7 @@ class TattooShopTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
         self.assertEqual(data['deleted_artist_id'], artist_id)
+        self.assertTrue(data['total_artists'])
 
     def test_delete_client(self):
         # Test sending a delete method for an existing client returns:
@@ -227,6 +228,7 @@ class TattooShopTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
         self.assertEqual(data['deleted_client_id'], client_id)
+        self.assertTrue(data['total_clients'])
 
     def test_delete_appointment(self):
         # Test sending a delete method for an existing appointment returns:
@@ -238,6 +240,7 @@ class TattooShopTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
         self.assertEqual(data['deleted_appointment_id'], appt_id)
+        self.assertTrue(data['total_upcoming_appointments'])
         
     '''
     Test Errors for GET Endpoints for Artist, Client, Appointment
