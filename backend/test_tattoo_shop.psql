@@ -30,7 +30,7 @@ CREATE DATABASE test_tattoo_shop;
 
 CREATE TABLE public.artists (
     id integer NOT NULL,
-    name text,
+    name text NOT NULL,
     phone text,
     styles text,
     image_link text NULL,
@@ -66,7 +66,7 @@ ALTER SEQUENCE public.artists_id_seq OWNED BY public.artists.id;
 
 CREATE TABLE public.clients (
     id integer NOT NULL,
-    name text,
+    name text NOT NULL,
     email text NULL,
     phone text,
     address text
@@ -104,7 +104,7 @@ CREATE TABLE public.appointment (
     id integer NOT NULL,
     artist integer,
     client integer,
-    appointment_date timestamp NOT NULL DEFAULT CURRENT_DATE
+    appointment_date timestamp NOT NULL
 );
 
 ALTER TABLE public.appointment OWNER TO postgres;

@@ -128,7 +128,7 @@ def create_app(test_config=None):
     @app.route('/api/artists', methods=['POST'])
     def create_artist():
         body = request.get_json()
-        name = body.get('name')
+        name = body.get('name', None)
         phone = body.get('phone', '')
         styles = body.get('styles', '')
         image_link = body.get('image_link', '')
@@ -168,7 +168,7 @@ def create_app(test_config=None):
     @app.route('/api/clients', methods=['POST'])
     def create_client():
         body = request.get_json()
-        name = body['name']
+        name = body.get('name', None)
         phone = body.get('phone', '')
         email = body.get('email', '')
         address = body.get('address', '')
@@ -192,6 +192,7 @@ def create_app(test_config=None):
         formatted_client = posted_client.format()
         if posted_client is None:
             abort(404)
+
         total_clients = len(Client.query.all())
         return jsonify({
                         'success': True,
@@ -203,19 +204,20 @@ def create_app(test_config=None):
     @app.route('/api/appointments', methods=['POST'])
     def create_appointment():
         body = request.get_json()
-        artist_id = body['artist']
-        client_id = body['client']
-        appointment_date = datetime.strptime(body['appointment_date'], "%a, %d %b %Y %I:%M:%S %Z")
+        artist_id = body.get('artist', None)
+        client_id = body.get('client', None)
+        appt_date = body.get('appointment_date', None)
+
+        if appt_date is None:
+            abort(422)
+        appointment_date = datetime.strptime(appt_date, "%a, %d %b %Y %I:%M:%S %Z")
 
         new_appt = Appointment(client=client_id, artist=artist_id, appointment_date=appointment_date)
 
         try:
             new_appt.insert()
         except:
-            return jsonify({
-                            'success': False,
-                            'message': 'Error posting new appointment'
-                            })
+            return abort(422)
 
         posted_appt = Appointment.query.filter(
                                                Appointment.artist == new_appt.artist
@@ -225,9 +227,15 @@ def create_app(test_config=None):
         if posted_appt is None:
             abort(404)
         formatted_appt = posted_appt.format()
+
+        now = datetime.now()
+        upcoming_appointments = Appointment.query.filter(
+                                                         Appointment.appointment_date > now
+                                                        ).all()
         return jsonify({
                         'success': True,
-                        'appointment': formatted_appt
+                        'appointment': formatted_appt,
+                        'total_upcoming_appointments': len(upcoming_appointments)
                         })
 
     '''

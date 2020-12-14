@@ -114,7 +114,7 @@ class TattooShopTestCase(unittest.TestCase):
         # Test post request for client endpoint returns:
         # new client attributes and 200 OK status
         payload = {
-                   'name': '',
+                   'name': 'Joe Schmo',
                    'phone': '',
                    'email': '',
                    'address': '',
@@ -297,16 +297,51 @@ class TattooShopTestCase(unittest.TestCase):
 
     '''
     Test Errors for POST Endpoints for Artist, Client, Appointment
-
-    def test_create_artist_error(self):
-        pass
-
-    def test_create_client_error(self):
-        pass
-
-    def test_create_appointment_error(self):
-        pass
     '''
+    # Test not adding an artist name returns a 422 error
+    def test_create_artist_error(self):
+        
+        payload = {
+                   'phone': '123-456-7891',
+                   'styles': 'Neo-Traditional',
+                   'image_link': '',
+                   'instagram_link': '',
+                   'email': '',
+                   }
+        res = self.client().post('/api/artists', json=payload)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 422)
+        self.assertEqual(data['success'], False)
+        self.assertTrue(data['message'])
+
+    # Test not adding a client name returns a 422 error
+    def test_create_client_error(self):
+        payload = {
+                   'phone': '',
+                   'email': '',
+                   'address': '',
+                   }
+        res = self.client().post('/api/clients', json=payload)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 422)
+        self.assertEqual(data['success'], False)
+        self.assertTrue(data['message'])
+
+    # Test creating appointment without date returns 422 error
+    def test_create_appointment_error(self):
+        payload = {
+                   'client': 1,
+                   'artist': 1,
+                   }
+        res = self.client().post('/api/appointments', json=payload)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 422)
+        self.assertEqual(data['success'], False)
+        self.assertTrue(data['message'])
+    
     '''
     Test Errors for PATCH Endpoints for Artist, Client, Appointment
 

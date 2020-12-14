@@ -111,7 +111,7 @@ class Appointment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     client = db.Column(db.Integer, db.ForeignKey("clients.id"))
     artist = db.Column(db.Integer, db.ForeignKey("artists.id"))
-    appointment_date = db.Column(db.DateTime, default=datetime.utcnow)
+    appointment_date = db.Column(db.DateTime, nullable=False)
 
     def insert(self):
         db.session.add(self)
