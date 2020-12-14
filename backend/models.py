@@ -60,7 +60,9 @@ class Artist(db.Model):
                 'name': self.name,
                 'phone': self.phone,
                 'styles': self.styles,
-                'email': self.email
+                'email': self.email,
+                'image_link': self.image_link,
+                'instagram_link': self.instagram_link
                 }
 
 
@@ -98,7 +100,9 @@ class Client(db.Model):
         return {
                 'id': self.id,
                 'name': self.name,
-                'email': self.email
+                'email': self.email,
+                'phone': self.phone,
+                'address': self.address
                 }
 
 

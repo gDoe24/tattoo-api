@@ -104,7 +104,7 @@ CREATE TABLE public.appointment (
     id integer NOT NULL,
     artist integer,
     client integer,
-    appointment_date DATE NOT NULL DEFAULT CURRENT_DATE
+    appointment_date timestamp NOT NULL DEFAULT CURRENT_DATE
 );
 
 ALTER TABLE public.appointment OWNER TO postgres;
@@ -163,10 +163,10 @@ COPY public.clients (id, name, email, phone, address) FROM stdin;
 \.
 
 COPY public.appointment (id, artist, client, appointment_date) FROM stdin;
-1	1	1	2021-03-06
-2	2	2	2021-07-04
-3	3	2	2021-08-09
-4	3	4	2021-01-01
+1	1	1	2021-03-06 12:00:00
+2	2	2	2021-07-04 10:00:00
+3	3	2	2021-08-09 11:00:00
+4	3	4	2021-01-01 12:00:00
 \.
 
 --

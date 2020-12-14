@@ -45,7 +45,7 @@ def create_app(test_config=None):
         })
 
     '''
-    GET
+    GET Endpoints
     '''
     # Endpoint to GET all artists
     @app.route('/api/artists')
@@ -60,14 +60,11 @@ def create_app(test_config=None):
     # Return a single artist according to artist id
     @app.route('/api/artists/<artist_id>')
     def single_artist(artist_id):
-
-        artist = Artist.query.filter(Artist.id == artist_id).one_or_none()
-
-        if artist is None:
-            return jsonify({
-                            'success': False,
-                            'message': 'Artist not found in database'
-                            })
+        
+        try:
+            artist = Artist.query.get(artist_id)
+        except:
+            abort(404)
 
         formatted_artist = artist.format()
         return jsonify({
@@ -95,14 +92,11 @@ def create_app(test_config=None):
     # Return a single client according to client id
     @app.route('/api/clients/<client_id>')
     def single_client(client_id):
-
-        client = Client.query.filter(Client.id == client_id).one_or_none()
-
-        if client is None:
-            return jsonify({
-                            'success': False,
-                            'message': "Could not locate Client in the database"
-                            })
+        
+        try:
+            client = Client.query.get(client_id)
+        except:
+            abort(404)
 
         formatted_client = client.format()
 
@@ -114,10 +108,11 @@ def create_app(test_config=None):
     # Return a single appointment according to id
     @app.route('/api/appointments/<appt_id>')
     def single_appointment(appt_id):
-        appt = Appointment.query.filter(Appointment.id == appt_id).one_or_none()
 
-        if appt is None:
-            return abort(404)
+        try:
+            appt = Appointment.query.get(appt_id)
+        except:
+            abort(404)
 
         formatted_appt = appt.format()
 
@@ -127,7 +122,7 @@ def create_app(test_config=None):
                         })
 
     '''
-    CREATE
+    POST Endpoints
     '''
     # Post endpoint for creating artists
     @app.route('/api/artists', methods=['POST'])
@@ -230,6 +225,89 @@ def create_app(test_config=None):
         if posted_appt is None:
             abort(404)
         formatted_appt = posted_appt.format()
+        return jsonify({
+                        'success': True,
+                        'appointment': formatted_appt
+                        })
+
+    '''
+    PATCH Endpoints
+    '''
+
+    # Patch endpoint for updating an artist
+    @app.route('/api/artists/<artist_id>', methods=['PATCH'])
+    def update_artist(artist_id):
+        body = request.get_json()
+        artist = Artist.query.get(artist_id)
+        artist.name = body.get('name', artist.name)
+        artist.phone = body.get('phone', artist.phone)
+        artist.styles = body.get('styles', artist.styles)
+        artist.image_link = body.get('image_link', artist.image_link)
+        artist.instagram_link = body.get('instagram_link', artist.instagram_link)
+        artist.email = body.get('email', artist.email)
+
+        try:
+            artist.update()
+        except:
+            abort(422)
+
+        updated_artist = Artist.query.get(artist_id)
+        formatted_artist = updated_artist.format()
+
+        return jsonify({
+                        'success': True,
+                        'artist': formatted_artist
+                        })
+
+    # Patch endpoint for updating a client
+    @app.route('/api/clients/<client_id>', methods=['PATCH'])
+    def update_client(client_id):
+
+        body = request.get_json()
+        client = Client.query.get(client_id)
+
+        client.name = body.get('name', client.name)
+        client.phone = body.get('phone', client.phone)
+        client.email = body.get('email', client.email)
+        client.address = body.get('address', client.address)
+
+        try:
+            client.update()
+        except:
+            abort(422)
+
+        updated_client = Client.query.get(client_id)
+        formatted_client = updated_client.format()
+
+        return jsonify({
+                        'success': True,
+                        'client': formatted_client
+                        })
+
+    # Patch endpoint for updating an appointment
+    @app.route('/api/appointments/<appt_id>', methods=['PATCH'])
+    def update_appointment(appt_id):
+        
+        body = request.get_json()
+        appt = Appointment.query.get(appt_id)
+
+        appt.artist = body.get('name', appt.artist)
+        appt.client = body.get('phone', appt.client)
+
+        if body['appointment_date'] is not None:
+            date = datetime.strptime(body['appointment_date'], "%a, %d %b %Y %I:%M:%S %Z")
+        else:
+            date = appt.appointment_date
+        appt.appointment_date = date
+
+        try:
+            appt.update()
+        except:
+            abort(422)
+        
+        updated_appt = Appointment.query.get(appt_id)
+        formatted_appt = updated_appt.format()
+
         return jsonify({
                         'success': True,
                         'appointment': formatted_appt

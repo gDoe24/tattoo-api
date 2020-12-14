@@ -162,9 +162,12 @@ class TattooShopTestCase(unittest.TestCase):
         res = self.client().patch('/api/artists/2', json=payload)
         data = json.loads(res.data)
 
+        artist = Artist.query.get(2)
+
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
         self.assertEqual(data['artist']['id'], 2)
+        self.assertEqual(data['artist']['name'], artist.name)
         self.assertEqual(data['artist']['phone'], payload['phone'])
         self.assertEqual(data['artist']['email'], payload['email'])
 
@@ -196,7 +199,7 @@ class TattooShopTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
         self.assertEqual(data['appointment']['id'], 1)
-        self.assertEqual(data['appointment']['appointment_date'],
+        self.assertEqual(datetime.strptime(data['appointment']['appointment_date'], "%a, %d %b %Y %I:%M:%S %Z"),
                          payload['appointment_date']
                          )
         
