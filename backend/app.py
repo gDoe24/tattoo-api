@@ -111,6 +111,21 @@ def create_app(test_config=None):
                         'client': formatted_client
                         })
 
+    # Return a single appointment according to id
+    @app.route('/api/appointments/<appt_id>')
+    def single_appointment(appt_id):
+        appt = Appointment.query.filter(Appointment.id == appt_id).one_or_none()
+
+        if appt is None:
+            return abort(404)
+
+        formatted_appt = appt.format()
+
+        return jsonify({
+                        'success': True,
+                        'appointment': formatted_appt
+                        })
+
     '''
     CREATE
     '''
