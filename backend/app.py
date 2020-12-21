@@ -5,6 +5,7 @@ from flask_cors import CORS
 from datetime import datetime
 import json
 from models import setup_db, Artist, Client, Appointment
+from auth.auth import requires_auth, AuthError
 
 
 '''
@@ -89,16 +90,14 @@ def create_app(test_config=None):
     @app.after_request
     def after_request(response):
         response.headers.add('ACCESS-CONTROL-ALLOW-HEADERS',
-                             'Content-Type,Authorization,true')
+                                'Content-Type,Authorization,true')
         response.headers.add('ACCESS-CONTROL-ALLOW-METHODS',
-                             'POST,GET,PATCH,DELETE')
+                                'POST,GET,PATCH,DELETE')
         return response
 
     @app.route('/')
     def index():
-        return jsonify({
-            'date': datetime(2021, 3, 6, 12, 30)
-        })
+        return "Healthy"
 
     '''
     GET Endpoints for Artist, Client, Appointment
@@ -162,6 +161,7 @@ def create_app(test_config=None):
 
     # Return a single appointment according to id
     @app.route('/api/appointments/<appt_id>')
+    @requires_auth('get:appointment')
     def single_appointment(appt_id):
 
         # Check for appointment in datbase
@@ -272,9 +272,9 @@ def create_app(test_config=None):
         appointment_date = format_datetime(appt_date)
 
         new_appt = Appointment(client=client_id,
-                               artist=artist_id,
-                               appointment_date=appointment_date
-                               )
+                                artist=artist_id,
+                                appointment_date=appointment_date
+                                )
         # Insert the new appointment into the database
         try:
             new_appt.insert()
@@ -284,8 +284,8 @@ def create_app(test_config=None):
         # Get the appointment in the database by matching the artist
         # and appointment time
         posted_appt = Appointment.query.filter(
-                                               Appointment.artist == new_appt.artist
-                                               ).filter(
+                                                Appointment.artist == new_appt.artist
+                                                ).filter(
                                                         Appointment.appointment_date == new_appt.appointment_date
                                                         ).order_by(Appointment.id).all()[-1]
         
@@ -294,7 +294,7 @@ def create_app(test_config=None):
         # Return an array containing all upcoming appointments
         now = datetime.now()
         upcoming_appointments = Appointment.query.filter(
-                                                         Appointment.appointment_date > now
+                                                            Appointment.appointment_date > now
                                                         ).all()
         return jsonify({
                         'success': True,
@@ -471,7 +471,7 @@ def create_app(test_config=None):
             abort(422)
         now = datetime.now()
         upcoming_appointments = Appointment.query.filter(
-                                                         Appointment.appointment_date > now
+                                                            Appointment.appointment_date > now
                                                         ).all()
 
         return jsonify({
@@ -486,40 +486,39 @@ def create_app(test_config=None):
     @app.errorhandler(400)
     def bad_request(error):
         return jsonify({
-          'success': False,
-          'error': 400,
-          'message': 'Bad Request'
+            'success': False,
+            'error': 400,
+            'message': 'Bad Request'
         }), 400
 
     @app.errorhandler(404)
     def not_found(error):
         return jsonify({
-          'success': False,
-          'error': 404,
-          'message': 'Resource Not Found',
+            'success': False,
+            'error': 404,
+            'message': 'Resource Not Found',
         }), 404
 
     @app.errorhandler(422)
     def unprocessable_request(error):
         return jsonify({
-          'success': False,
-          'error': 422,
-          'message': 'Unprocessable Request'
+            'success': False,
+            'error': 422,
+            'message': 'Unprocessable Request'
         }), 422
 
     @app.errorhandler(500)
     def unprocessable_request(error):
         return jsonify({
-          'success': False,
-          'error': 500,
-          'message': 'Internal Server Error'
+            'success': False,
+            'error': 500,
+            'message': 'Internal Server Error'
         }), 500
-
-
+    
     return app
-
 
 APP = create_app()
 
 if __name__ == '__main__':
     APP.run(host='0.0.0.0', port=8080, debug=True)
+
