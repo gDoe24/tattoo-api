@@ -344,16 +344,80 @@ class TattooShopTestCase(unittest.TestCase):
     
     '''
     Test Errors for PATCH Endpoints for Artist, Client, Appointment
-
-    def test_update_artist_error(self):
-        pass
-
-    def test_update_client_error(self):
-        pass
-
-    def test_update_appointment_error(self):
-        pass
     '''
+
+    # Test updating an arist which does not exist returns a 404 error
+    def test_update_artist_error(self):
+        
+        payload = {
+                   'name': 'John Deer',
+                   'phone': '123-456-7891',
+                   'styles': 'Neo-Traditional',
+                   'image_link': '',
+                   'instagram_link': '',
+                    }
+        res = self.client().patch('/api/artists/1000')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data['success'], False)
+        self.assertTrue(data['message'])
+
+    # Test updating a client which does not exist returns a 404 error
+    def test_update_client_error(self):
+        payload = {
+                   'name': 'John',
+                   'phone': '',
+                   'email': '',
+                   'address': '',
+                   }
+        res = self.client().patch('/api/clients/1000', json=payload)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data['success'], False)
+        self.assertTrue(data['message'])
+
+    # Test using the wrong appointment format returns a 422 error
+    def test_update_appointment_error(self):
+        payload = {
+                    'appointment_date': "2020, 12 31, 12:30:54"
+                    }
+
+        res = self.client().patch('/api/appointments/2', json=payload)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 422)
+        self.assertEqual(data['success'], False)
+        self.assertTrue(data['message'])
+
+    # Test updating the appointment with non existent artist returns 
+    # 404 error
+    def test_update_appointment_artist_error(self):
+        payload = {
+                    'artist': 1000
+                    }
+
+        res = self.client().patch('/api/appointments/2', json=payload)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data['success'], False)
+        self.assertTrue(data['message'])
+
+    # Test updating the appointment with non existent client returns 
+    # 404 error
+    def test_update_appointment_client_error(self):
+        payload = {
+                    'client': 1000
+                    }
+
+        res = self.client().patch('/api/appointments/2', json=payload)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data['success'], False)
+        self.assertTrue(data['message'])
 
     '''
     Test Errors for DELETE Endpoints for Artist, Client, Appointment

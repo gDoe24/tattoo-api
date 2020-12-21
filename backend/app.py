@@ -20,6 +20,44 @@ def paginate_clients(request, clients):
 
     return current_clients
 
+# Format date string and check if correct datetime format
+def format_datetime(date_time):
+    if date_time is None:
+        return
+    try:
+        return datetime.strptime(date_time, "%a, %d %b %Y %H:%M:%S %Z")
+    except:
+        abort(422)
+
+# Check database for artist
+def check_for_artist(artist):
+    if artist is None:
+        return
+
+    check_artist = Artist.query.get(artist)
+    if check_artist is None:
+        abort(404)
+
+# Check database for client
+def check_for_client(client):
+    if client is None:
+        return
+
+    check_client = Client.query.get(client)
+
+    if check_client is None:
+        abort(404)
+
+# Check database for appointment
+def check_for_appointment(appt):
+    if appt is None:
+        return
+
+    check_appt = Appointment.query.get(appt)
+    if check_appt is None:
+        abort(404)
+
+
 # Primary handler of the application
 # Contains Endpoints, CORS, Errors
 def create_app(test_config=None):
@@ -210,7 +248,7 @@ def create_app(test_config=None):
 
         if appt_date is None:
             abort(422)
-        appointment_date = datetime.strptime(appt_date, "%a, %d %b %Y %I:%M:%S %Z")
+        appointment_date = datetime.strptime(appt_date, "%a, %d %b %Y %H:%M:%S %Z")
 
         new_appt = Appointment(client=client_id, artist=artist_id, appointment_date=appointment_date)
 
@@ -247,6 +285,10 @@ def create_app(test_config=None):
     def update_artist(artist_id):
         body = request.get_json()
         artist = Artist.query.get(artist_id)
+
+        if artist is None:
+            abort(404)
+
         artist.name = body.get('name', artist.name)
         artist.phone = body.get('phone', artist.phone)
         artist.styles = body.get('styles', artist.styles)
@@ -272,7 +314,12 @@ def create_app(test_config=None):
     def update_client(client_id):
 
         body = request.get_json()
+        # Check database for client
+        check_for_client(client_id)
         client = Client.query.get(client_id)
+
+        if client is None:
+            abort(404)
 
         client.name = body.get('name', client.name)
         client.phone = body.get('phone', client.phone)
@@ -295,24 +342,36 @@ def create_app(test_config=None):
     # Patch endpoint for updating an appointment
     @app.route('/api/appointments/<appt_id>', methods=['PATCH'])
     def update_appointment(appt_id):
-        
+
         body = request.get_json()
+        
+        # checkk database for appointment
+        check_for_appointment(appt_id)
         appt = Appointment.query.get(appt_id)
+    
+        # Get artist from request and check database
+        artist = body.get('artist', None)
+        check_for_artist(artist)
 
-        appt.artist = body.get('name', appt.artist)
-        appt.client = body.get('phone', appt.client)
+        # Get client from request and check database
+        client = body.get('client', None)
+        check_for_client(client)
 
-        if body['appointment_date'] is not None:
-            date = datetime.strptime(body['appointment_date'], "%a, %d %b %Y %I:%M:%S %Z")
-        else:
-            date = appt.appointment_date
-        appt.appointment_date = date
+        # If body does not include artist/client, keep current artist/client
+        appt.artist = artist if artist is not None else appt.artist
+        appt.client = client if client is not None else appt.client
+
+        appointment_date = body.get('appointment_date', None)
+        
+        date = format_datetime(appointment_date)
+
+        appt.appointment_date = date if date is not None else appt.appointment_date
 
         try:
             appt.update()
         except:
             abort(422)
-        
+
         updated_appt = Appointment.query.get(appt_id)
         formatted_appt = updated_appt.format()
 
