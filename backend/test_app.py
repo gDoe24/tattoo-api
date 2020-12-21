@@ -298,7 +298,7 @@ class TattooShopTestCase(unittest.TestCase):
     '''
     Test Errors for POST Endpoints for Artist, Client, Appointment
     '''
-    # Test not adding an artist name returns a 422 error
+    # Test creating an artist without a name returns a 422 error
     def test_create_artist_error(self):
         
         payload = {
@@ -315,7 +315,7 @@ class TattooShopTestCase(unittest.TestCase):
         self.assertEqual(data['success'], False)
         self.assertTrue(data['message'])
 
-    # Test not adding a client name returns a 422 error
+    # Test creating an client without a name returns a 422 error
     def test_create_client_error(self):
         payload = {
                    'phone': '',

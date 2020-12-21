@@ -99,9 +99,10 @@ def create_app(test_config=None):
     @app.route('/api/artists/<artist_id>')
     def single_artist(artist_id):
         
+        # Check for artist in database
+        check_for_artist(artist_id)
+        # Get the artist and return formatted artist
         artist = Artist.query.get(artist_id)
-        if artist is None:
-            abort(404)
 
         formatted_artist = artist.format()
         return jsonify({
@@ -132,10 +133,10 @@ def create_app(test_config=None):
     @app.route('/api/clients/<client_id>')
     def single_client(client_id):
         
+        # Check for artist in database
+        check_for_client(client_id)
+        # Get the artist and return formatted artist
         client = Client.query.get(client_id)
-        if client is None:
-            abort(404)
-
         formatted_client = client.format()
 
         return jsonify({
@@ -147,11 +148,10 @@ def create_app(test_config=None):
     @app.route('/api/appointments/<appt_id>')
     def single_appointment(appt_id):
 
-        
+        # Checkk for appointment in datbase
+        check_for_appointment(appt_id)
+        # Get appointment and return formatted appointment
         appt = Appointment.query.get(appt_id)
-        if appt is None:
-            abort(404)
-
         formatted_appt = appt.format()
 
         return jsonify({
@@ -284,11 +284,13 @@ def create_app(test_config=None):
     @app.route('/api/artists/<artist_id>', methods=['PATCH'])
     def update_artist(artist_id):
         body = request.get_json()
+
+        # Check database for client
+        check_for_artist(artist_id)
         artist = Artist.query.get(artist_id)
 
-        if artist is None:
-            abort(404)
-
+        # Update artist values with new values if new values exist
+        # Else keep old values
         artist.name = body.get('name', artist.name)
         artist.phone = body.get('phone', artist.phone)
         artist.styles = body.get('styles', artist.styles)
@@ -318,9 +320,8 @@ def create_app(test_config=None):
         check_for_client(client_id)
         client = Client.query.get(client_id)
 
-        if client is None:
-            abort(404)
-
+        # Update client with new values if value exists
+        # Else keep old values
         client.name = body.get('name', client.name)
         client.phone = body.get('phone', client.phone)
         client.email = body.get('email', client.email)
@@ -344,11 +345,11 @@ def create_app(test_config=None):
     def update_appointment(appt_id):
 
         body = request.get_json()
-        
-        # checkk database for appointment
+
+        # Check database for appointment
         check_for_appointment(appt_id)
         appt = Appointment.query.get(appt_id)
-    
+
         # Get artist from request and check database
         artist = body.get('artist', None)
         check_for_artist(artist)
@@ -362,7 +363,7 @@ def create_app(test_config=None):
         appt.client = client if client is not None else appt.client
 
         appointment_date = body.get('appointment_date', None)
-        
+
         date = format_datetime(appointment_date)
 
         appt.appointment_date = date if date is not None else appt.appointment_date
