@@ -389,9 +389,11 @@ def create_app(test_config=None):
     @app.route('/api/artists/<artist_id>', methods=['DELETE'])
     def delete_artist(artist_id):
 
+        # Check database for artist
+        check_for_artist(artist_id)
+        # Get artist and delete
         artist = Artist.query.get(artist_id)
-        if artist is None:
-            abort(404)
+
         try:
             artist.delete()
         except:
@@ -408,9 +410,12 @@ def create_app(test_config=None):
     # DELETE endpoint for a single client
     @app.route('/api/clients/<client_id>', methods=['DELETE'])
     def delete_client(client_id):
+
+        # Check database for client
+        check_for_client(client_id)
+        # Get client and delete
         client = Client.query.get(client_id)
-        if client is None:
-            abort(404)
+
         try:
             client.delete()
         except:
@@ -428,9 +433,11 @@ def create_app(test_config=None):
     @app.route('/api/appointments/<appt_id>', methods=['DELETE'])
     def delete_appointment(appt_id):
 
+        # Check database for appointment
+        check_for_appointment(appt_id)
+        # Get appointment and delete
         appt = Appointment.query.get(appt_id)
-        if appt is None:
-            abort(404)
+        
         try:
             appt.delete()
         except:

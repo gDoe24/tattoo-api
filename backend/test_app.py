@@ -421,16 +421,34 @@ class TattooShopTestCase(unittest.TestCase):
 
     '''
     Test Errors for DELETE Endpoints for Artist, Client, Appointment
-
-    def test_delete_artist_error(self):
-        pass
-
-    def test_delete_client_error(self):
-        pass
-
-    def test_delete_appointment_error(self):
-        pass
     '''
+    # Test deleting artist that does not exist return 404
+    def test_delete_artist_error(self):
+        
+        res = self.client().delete('/api/artists/1000')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data['success'], False)
+        self.assertTrue(data['message'])
+    # Test deleting client that does not exist return 404
+    def test_delete_client_error(self):
+        res = self.client().delete('/api/clients/1000')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data['success'], False)
+        self.assertTrue(data['message'])
+    
+    # Test deleting appointment that does not exist return 404
+    def test_delete_appointment_error(self):
+        res = self.client().delete('/api/appointments/1000')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data['success'], False)
+        self.assertTrue(data['message'])
+    
 
 if __name__ == '__main__':
     unittest.main()
