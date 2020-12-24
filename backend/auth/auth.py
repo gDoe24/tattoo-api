@@ -23,31 +23,30 @@ class AuthError(Exception):
 '''
 Get the authorization token from the request header
 '''
-def get_token_header():
+def get_token_auth_header():
 
     auth = request.headers.get("Authorization", None)
     if not auth:
         raise AuthError({
-                        "code": "authorization_header_missing",
-                        "description": "authorization header not found"
+                        'code': 'authorization_header_missing',
+                        'description': 'Authoriation header not found'
                         }, 401)
 
     header_parts = auth.split(' ')
+
     if len(header_parts) != 2:
         raise AuthError({
-                        "code": "invalid_header",
-                        "description": "Header length != 2"
+                        'code': 'invalid_header',
+                        'description': "header parts != 2"
                         }, 401)
 
-    if header_parts[0].lower() != "bearer":
+    elif header_parts[0].lower() != 'bearer':
         raise AuthError({
-                        "code": "invalid authorization type",
-                        "description": "Authorization is not bearer"
+                        'code': 'invalid_header',
+                        'description': 'header must start with Bearer'
                         }, 401)
 
-    token = header_parts[1]
-
-    return token
+    return header_parts[1]
 
 '''
 Check the authorization token for the required permissions
@@ -129,9 +128,9 @@ def requires_auth(permission=''):
     def requires_auth_decorator(f):
         @wraps(f)
         def wrapper(*args, **kwargs):
-            token = get_token_header()
+            token = get_token_auth_header()
             try:
-                payload = verify_decode_jwt
+                payload = verify_decode_jwt(token)
             except:
                 abort(401)
             check_permissions(permission, payload)

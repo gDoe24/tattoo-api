@@ -19,6 +19,7 @@ class TattooShopTestCase(unittest.TestCase):
         self.database_path = "postgresql://postgres@localhost:5432/{}".format(
                                 self.database_name
                                 )
+        self.manager_jwt = 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Inh0Z1Q3dl95ZzB0VURmV2VnYnBhXyJ9.eyJpc3MiOiJodHRwczovL2ZzbmQtOC51cy5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMDAzNzMzMTE4MzgwMTczNjk1MzkiLCJhdWQiOlsiaHR0cHM6Ly90YXR0b28tYXBpIiwiaHR0cHM6Ly9mc25kLTgudXMuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTYwODg0ODcyNCwiZXhwIjoxNjA4ODU1OTI0LCJhenAiOiJQcE0yT0VwbFZKbEV5RTV4eDN2TFNiN1JtTW1RZEYxQyIsInNjb3BlIjoib3BlbmlkIHByb2ZpbGUgZW1haWwiLCJwZXJtaXNzaW9ucyI6WyJjcmVhdGU6YXBwb2ludG1lbnQiLCJjcmVhdGU6YXJ0aXN0IiwiY3JlYXRlOmNsaWVudCIsImRlbGV0ZTphcHBvaW50bWVudCIsImRlbGV0ZTphcnRpc3QiLCJkZWxldGU6Y2xpZW50IiwiZ2V0OmFsbCIsImdldDphcHBvaW50bWVudCIsInVwZGF0ZTphcHBvaW50bWVudCIsInVwZGF0ZTphcnRpc3QiLCJ1cGRhdGU6Y2xpZW50Il19.nhw6KPxcIWiIpJQ5_-wCKwsIY2NDyQ7parALSHb9JF0kYyWOtG06Ej0Nh_L9PHyLXB6tFIT2UdfBpeMhq6pYV6RJOSWb83HOwtpkz0sJxE-0jV_5K8QlkRdZSNKuIAXsrsMTFTtve2rmsJHzU26P_gGBNUgUPT6SKikzEH7YtD3zcIs-c_7CdhbGDEl0ZN_52fwW2hjttKw5qsXVlfKEkP4XDx1n5NoG_AZJLJfDSFf35QqoA6d26WEnhoIoJq1snAKnjx_Elre75W8NDnhFSgG3D-0vosGYRICg8DscPwysrEpKEgxUyQOHuVCOD6-TZUU5ygI_tPfWoIH9j1bCfA'
         setup_db(self.app, self.database_path)
 
         with self.app.app_context():
@@ -57,7 +58,7 @@ class TattooShopTestCase(unittest.TestCase):
     def test_get_all_clients(self):
         # Test GET all clients endpoint returns:
         # all clients and 200 OK status
-        res = self.client().get('/api/clients')
+        res = self.client().get('/api/clients', headers={"Authorization": self.manager_jwt})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -68,7 +69,7 @@ class TattooShopTestCase(unittest.TestCase):
     def test_get_client_by_id(self):
         # Test GET client according to artist_id returns
         # client id and 200 OK status
-        res = self.client().get('/api/clients/2')
+        res = self.client().get('/api/clients/2', headers={"Authorization": self.manager_jwt})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -79,7 +80,7 @@ class TattooShopTestCase(unittest.TestCase):
         # Test GET appointment according to appt id returns:
         # appt id and 200 OK
 
-        res = self.client().get('/api/appointments/2')
+        res = self.client().get('/api/appointments/2', headers={"Authorization": self.manager_jwt})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -101,7 +102,8 @@ class TattooShopTestCase(unittest.TestCase):
                    'instagram_link': '',
                    'email': '',
                    }
-        res = self.client().post('/api/artists', json=payload)
+            
+        res = self.client().post('/api/artists', headers={"Authorization": self.manager_jwt}, json=payload)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -119,7 +121,7 @@ class TattooShopTestCase(unittest.TestCase):
                    'email': '',
                    'address': '',
                    }
-        res = self.client().post('/api/clients', json=payload)
+        res = self.client().post('/api/clients', json=payload, headers={"Authorization": self.manager_jwt})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -136,7 +138,7 @@ class TattooShopTestCase(unittest.TestCase):
                    'artist': 1,
                    'appointment_date': datetime(2021, 3, 6, 12, 30)
                    }
-        res = self.client().post('/api/appointments', json=payload)
+        res = self.client().post('/api/appointments', json=payload, headers={"Authorization": self.manager_jwt})
         data = json.loads(res.data)
 
         last_appt = Appointment.query.all()[-1].id
@@ -159,7 +161,7 @@ class TattooShopTestCase(unittest.TestCase):
                     'email': 'creative_genius@aol.com'
                    }
 
-        res = self.client().patch('/api/artists/2', json=payload)
+        res = self.client().patch('/api/artists/2', json=payload, headers={"Authorization": self.manager_jwt})
         data = json.loads(res.data)
 
         artist = Artist.query.get(2)
@@ -178,7 +180,7 @@ class TattooShopTestCase(unittest.TestCase):
                     'phone': '770-231-4234',
                     'email': 'simplord12@gmail.com'
                     }
-        res = self.client().patch('/api/clients/2', json=payload)
+        res = self.client().patch('/api/clients/2', json=payload, headers={"Authorization": self.manager_jwt})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -193,7 +195,7 @@ class TattooShopTestCase(unittest.TestCase):
         payload = {
                     "appointment_date": datetime(2021, 8, 24, 2, 30)
                     }
-        res = self.client().patch('/api/appointments/1', json=payload)
+        res = self.client().patch('/api/appointments/1', json=payload, headers={"Authorization": self.manager_jwt})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -210,7 +212,7 @@ class TattooShopTestCase(unittest.TestCase):
         # Test sending a delete method for an existing artist returns:
         # id of the deleted artist and 200 OK
         artist_id = Artist.query.order_by(Artist.id).all()[-1].id
-        res = self.client().delete(f"/api/artists/{artist_id}")
+        res = self.client().delete(f"/api/artists/{artist_id}", headers={"Authorization": self.manager_jwt})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -222,7 +224,7 @@ class TattooShopTestCase(unittest.TestCase):
         # Test sending a delete method for an existing client returns:
         # id of the deleted client and 200 OK
         client_id = Client.query.order_by(Client.id).all()[-1].id
-        res = self.client().delete(f"/api/clients/{client_id}")
+        res = self.client().delete(f"/api/clients/{client_id}", headers={"Authorization": self.manager_jwt})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -234,7 +236,7 @@ class TattooShopTestCase(unittest.TestCase):
         # Test sending a delete method for an existing appointment returns:
         # id of the deleted appointment and 200 OK
         appt_id = Appointment.query.order_by(Appointment.id).all()[-1].id
-        res = self.client().delete(f"/api/appointments/{appt_id}")
+        res = self.client().delete(f"/api/appointments/{appt_id}", headers={"Authorization": self.manager_jwt})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -268,7 +270,7 @@ class TattooShopTestCase(unittest.TestCase):
     # Test request for clients page that does not exist returns 404
     def test_get_all_clients_error(self):
         
-        res = self.client().get('/api/clients?page=1000')
+        res = self.client().get('/api/clients?page=1000', headers={"Authorization": self.manager_jwt})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -278,7 +280,7 @@ class TattooShopTestCase(unittest.TestCase):
     # Test request for client that does not exist returns 404
     def test_get_client_by_id_error(self):
         
-        res = self.client().get('/api/clients/10000')
+        res = self.client().get('/api/clients/10000', headers={"Authorization": self.manager_jwt})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -288,7 +290,7 @@ class TattooShopTestCase(unittest.TestCase):
     # Test request for appointment that does not exist returns 404
     def test_get_appointment_by_id_error(self):
         
-        res = self.client().get('/api/appointments/10000')
+        res = self.client().get('/api/appointments/10000', headers={"Authorization": self.manager_jwt})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -308,7 +310,7 @@ class TattooShopTestCase(unittest.TestCase):
                    'instagram_link': '',
                    'email': '',
                    }
-        res = self.client().post('/api/artists', json=payload)
+        res = self.client().post('/api/artists', json=payload, headers={"Authorization": self.manager_jwt})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 422)
@@ -322,7 +324,7 @@ class TattooShopTestCase(unittest.TestCase):
                    'email': '',
                    'address': '',
                    }
-        res = self.client().post('/api/clients', json=payload)
+        res = self.client().post('/api/clients', json=payload, headers={"Authorization": self.manager_jwt})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 422)
@@ -335,7 +337,7 @@ class TattooShopTestCase(unittest.TestCase):
                    'client': 1,
                    'artist': 1,
                    }
-        res = self.client().post('/api/appointments', json=payload)
+        res = self.client().post('/api/appointments', json=payload, headers={"Authorization": self.manager_jwt})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 422)
@@ -356,7 +358,7 @@ class TattooShopTestCase(unittest.TestCase):
                    'image_link': '',
                    'instagram_link': '',
                     }
-        res = self.client().patch('/api/artists/1000')
+        res = self.client().patch('/api/artists/1000', headers={"Authorization": self.manager_jwt})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -371,7 +373,7 @@ class TattooShopTestCase(unittest.TestCase):
                    'email': '',
                    'address': '',
                    }
-        res = self.client().patch('/api/clients/1000', json=payload)
+        res = self.client().patch('/api/clients/1000', json=payload, headers={"Authorization": self.manager_jwt})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -384,7 +386,7 @@ class TattooShopTestCase(unittest.TestCase):
                     'appointment_date': "2020, 12 31, 12:30:54"
                     }
 
-        res = self.client().patch('/api/appointments/2', json=payload)
+        res = self.client().patch('/api/appointments/2', json=payload, headers={"Authorization": self.manager_jwt})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 422)
@@ -398,7 +400,7 @@ class TattooShopTestCase(unittest.TestCase):
                     'artist': 1000
                     }
 
-        res = self.client().patch('/api/appointments/2', json=payload)
+        res = self.client().patch('/api/appointments/2', json=payload, headers={"Authorization": self.manager_jwt})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -412,7 +414,7 @@ class TattooShopTestCase(unittest.TestCase):
                     'client': 1000
                     }
 
-        res = self.client().patch('/api/appointments/2', json=payload)
+        res = self.client().patch('/api/appointments/2', json=payload, headers={"Authorization": self.manager_jwt})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -425,7 +427,7 @@ class TattooShopTestCase(unittest.TestCase):
     # Test deleting artist that does not exist return 404
     def test_delete_artist_error(self):
         
-        res = self.client().delete('/api/artists/1000')
+        res = self.client().delete('/api/artists/1000', headers={"Authorization": self.manager_jwt})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -433,7 +435,7 @@ class TattooShopTestCase(unittest.TestCase):
         self.assertTrue(data['message'])
     # Test deleting client that does not exist return 404
     def test_delete_client_error(self):
-        res = self.client().delete('/api/clients/1000')
+        res = self.client().delete('/api/clients/1000', headers={"Authorization": self.manager_jwt})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -442,13 +444,16 @@ class TattooShopTestCase(unittest.TestCase):
     
     # Test deleting appointment that does not exist return 404
     def test_delete_appointment_error(self):
-        res = self.client().delete('/api/appointments/1000')
+        res = self.client().delete('/api/appointments/1000', headers={"Authorization": self.manager_jwt})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
         self.assertEqual(data['success'], False)
         self.assertTrue(data['message'])
     
+    '''
+    Test Role Based Authentication
+    '''
 
 if __name__ == '__main__':
     unittest.main()
