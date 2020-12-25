@@ -7,7 +7,6 @@ from flask_sqlalchemy import SQLAlchemy
 from app import create_app
 from models import setup_db, Artist, Client, Appointment
 
-
 class TattooShopTestCase(unittest.TestCase):
     # This class represents the tattoo test case
 
@@ -19,7 +18,9 @@ class TattooShopTestCase(unittest.TestCase):
         self.database_path = "postgresql://postgres@localhost:5432/{}".format(
                                 self.database_name
                                 )
-        self.manager_jwt = 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Inh0Z1Q3dl95ZzB0VURmV2VnYnBhXyJ9.eyJpc3MiOiJodHRwczovL2ZzbmQtOC51cy5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMDAzNzMzMTE4MzgwMTczNjk1MzkiLCJhdWQiOlsiaHR0cHM6Ly90YXR0b28tYXBpIiwiaHR0cHM6Ly9mc25kLTgudXMuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTYwODg0ODcyNCwiZXhwIjoxNjA4ODU1OTI0LCJhenAiOiJQcE0yT0VwbFZKbEV5RTV4eDN2TFNiN1JtTW1RZEYxQyIsInNjb3BlIjoib3BlbmlkIHByb2ZpbGUgZW1haWwiLCJwZXJtaXNzaW9ucyI6WyJjcmVhdGU6YXBwb2ludG1lbnQiLCJjcmVhdGU6YXJ0aXN0IiwiY3JlYXRlOmNsaWVudCIsImRlbGV0ZTphcHBvaW50bWVudCIsImRlbGV0ZTphcnRpc3QiLCJkZWxldGU6Y2xpZW50IiwiZ2V0OmFsbCIsImdldDphcHBvaW50bWVudCIsInVwZGF0ZTphcHBvaW50bWVudCIsInVwZGF0ZTphcnRpc3QiLCJ1cGRhdGU6Y2xpZW50Il19.nhw6KPxcIWiIpJQ5_-wCKwsIY2NDyQ7parALSHb9JF0kYyWOtG06Ej0Nh_L9PHyLXB6tFIT2UdfBpeMhq6pYV6RJOSWb83HOwtpkz0sJxE-0jV_5K8QlkRdZSNKuIAXsrsMTFTtve2rmsJHzU26P_gGBNUgUPT6SKikzEH7YtD3zcIs-c_7CdhbGDEl0ZN_52fwW2hjttKw5qsXVlfKEkP4XDx1n5NoG_AZJLJfDSFf35QqoA6d26WEnhoIoJq1snAKnjx_Elre75W8NDnhFSgG3D-0vosGYRICg8DscPwysrEpKEgxUyQOHuVCOD6-TZUU5ygI_tPfWoIH9j1bCfA'
+        self.manager_jwt = 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Inh0Z1Q3dl95ZzB0VURmV2VnYnBhXyJ9.eyJpc3MiOiJodHRwczovL2ZzbmQtOC51cy5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMDAzNzMzMTE4MzgwMTczNjk1MzkiLCJhdWQiOlsiaHR0cHM6Ly90YXR0b28tYXBpIiwiaHR0cHM6Ly9mc25kLTgudXMuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTYwODg1NjM3NSwiZXhwIjoxNjA4ODYzNTc1LCJhenAiOiJQcE0yT0VwbFZKbEV5RTV4eDN2TFNiN1JtTW1RZEYxQyIsInNjb3BlIjoib3BlbmlkIHByb2ZpbGUgZW1haWwiLCJwZXJtaXNzaW9ucyI6WyJjcmVhdGU6YXBwb2ludG1lbnQiLCJjcmVhdGU6YXJ0aXN0IiwiY3JlYXRlOmNsaWVudCIsImRlbGV0ZTphcHBvaW50bWVudCIsImRlbGV0ZTphcnRpc3QiLCJkZWxldGU6Y2xpZW50IiwiZ2V0OmFsbCIsImdldDphcHBvaW50bWVudCIsInVwZGF0ZTphcHBvaW50bWVudCIsInVwZGF0ZTphcnRpc3QiLCJ1cGRhdGU6Y2xpZW50Il19.SuoeSyXuJmtNAIUgEdbFK0PZ8FyHmUEbhyQurAhZfw5F775y-pd76D7fTNNH5uWvRunPYiHfkiDtzXIEaRjJKo1SOgQlWYm-sKLJfZ2DUHdBb3EIzHXovw3GM3I6_ekbK8R0KA5sEMETHvRaospVmTL-bLjOyp1fDcTG2Dh3AZj3bistFFIbjX_Nq_h43Uht7fxo6tm593G-s-uc7SFY34oj6zOVkIEZi_lnfeMPBTI9smIfZx1Df9XD8rbxwtNbsxuej8lytSZToeOZGG0S7o5JOGIHeFDQ0VvtlPffX2abT1k30_YmrMXbtm4AWDRxJcXFvyz8Wz_czf56kcA0Dw'
+        self.client_jwt = 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Inh0Z1Q3dl95ZzB0VURmV2VnYnBhXyJ9.eyJpc3MiOiJodHRwczovL2ZzbmQtOC51cy5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWZlNTI3YWE0NTIyNjgwMDc1NWEzMjNhIiwiYXVkIjoiaHR0cHM6Ly90YXR0b28tYXBpIiwiaWF0IjoxNjA4ODUzNTQxLCJleHAiOjE2MDg4NjA3NDEsImF6cCI6IlBwTTJPRXBsVkpsRXlFNXh4M3ZMU2I3Um1NbVFkRjFDIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJnZXQ6YXBwb2ludG1lbnQiXX0.R0lsssi5Akyy5vNuXdWiaDUL3jV2KH66sWUrTggfGOt6NBDlRCNiV7GCmk7c2tPgM0Sohzf48GyEeAtTG-x52fVGpPUBTeFcAuf-FQGzdiaHkOYRuA3XjpWBvGjdnLVYp5-5j8oCUbHJ2WOz1WmBpeJjNgh35yWHNzDdM5rETxvREKqxAYPpaG8abcmWGZ6z_DG9vMk3E8SBrz4y8C02konOdgd4xAw6ohnK6fEoJCe4W4dwg4CNTBTVXYfpw48tTbAq9YoOchbbSZbbPRMLKtNO2qVkwB4pMKx8HOS4uQzaQlniNlONEsF4e7Tudw2AZdNUr1Bo1a9nnkxn-UxgfQ'
+        self.artist_jwt = 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Inh0Z1Q3dl95ZzB0VURmV2VnYnBhXyJ9.eyJpc3MiOiJodHRwczovL2ZzbmQtOC51cy5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWZlNTJjMzBiYmM0ZjkwMDZmMWZhYjY3IiwiYXVkIjoiaHR0cHM6Ly90YXR0b28tYXBpIiwiaWF0IjoxNjA4ODU0NzE3LCJleHAiOjE2MDg4NjE5MTcsImF6cCI6IlBwTTJPRXBsVkpsRXlFNXh4M3ZMU2I3Um1NbVFkRjFDIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJjcmVhdGU6YXBwb2ludG1lbnQiLCJjcmVhdGU6Y2xpZW50IiwiZGVsZXRlOmFwcG9pbnRtZW50IiwiZ2V0OmFsbCIsImdldDphcHBvaW50bWVudCIsInVwZGF0ZTphcHBvaW50bWVudCIsInVwZGF0ZTpjbGllbnQiXX0.oW_28ufom_lGKwZ_FmMe4aq6ubC1kYVG7G2s046rhuUiZa0H-cu4f1_8gTXpNVHozkY2-K7yR3ze-ePdVmr581J9cQoyEiPPcTg6rlqyL4jZniD-fFQg8dosDXEZzK0W8zU-7IB5EijJ-R1fWsPDWKRWBIfwE3PX2L93qKwZ54IGODWPJnlw-3SVj4Tk52c7MOiRlbw889Y67ovIRxBeeJReAdVJ8nvGr_jhGqpgxt39i0Vg3VThWrdHP5PCo_7ja4y-WpSuyaBD7yHRn1eeZLtKa3XuB0fBkCvxp6eBUtgVJ8t60xEc05PK9Fzy2FM8xZ2iOHPRaF0iLL_QDSNFUQ'
         setup_db(self.app, self.database_path)
 
         with self.app.app_context():
@@ -454,6 +455,72 @@ class TattooShopTestCase(unittest.TestCase):
     '''
     Test Role Based Authentication
     '''
+
+    # Test Client can view a single appointment
+    def test_client_view_appointment(self):
+
+        res = self.client().get('/api/appointments/2',
+                                headers={
+                                         "Authorization": self.client_jwt
+                                         }
+                                )
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual(data['appointment']['id'], 2)
+
+    # Test Client forbidden to update an appointment
+    def test_client_update_appointment_forbidden(self):
+        
+        payload = {
+                    "artist": 2
+                   }
+        res = self.client().patch('/api/appointments/2',
+                                  json=payload,
+                                  headers={
+                                           "Authorization": self.client_jwt
+                                           }
+                                  )
+        data = json.loads(res.data)
+
+        self.assertTrue(res.status_code, 403)
+        self.assertEqual(data['success'], False)
+        self.assertTrue(data['message'])
+
+    # Test artist can update an appointment
+    def test_artist_update_appointment(self):
+        
+        payload = {
+                    'appointment_date': datetime(2021, 4, 6, 3, 30)
+                    }
+        res = self.client().patch('/api/appointments/2',
+                                  json=payload, 
+                                  headers={
+                                           "Authorization": self.artist_jwt
+                                           }
+                                  )
+        data = json.loads(res.data)
+        
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual(datetime.strptime(data['appointment']['appointment_date'], "%a, %d %b %Y %I:%M:%S %Z"),
+                         payload['appointment_date']
+                         )
+
+    # Test artist unable to delete a client
+    def test_artist_delete_client_forbidden(self):
+        
+        res = self.client().delete('/api/clients/2',
+                                   headers={
+                                            "Authorization": self.artist_jwt
+                                            }
+                                    )
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 403)
+        self.assertEqual(data['success'], False)
+        self.assertTrue(data['message'])
 
 if __name__ == '__main__':
     unittest.main()
