@@ -471,7 +471,7 @@ class TattooShopTestCase(unittest.TestCase):
         self.assertEqual(data['appointment']['id'], 2)
 
     # Test Client forbidden to update an appointment
-    def test_client_update_appointment_forbidden(self):
+    def test_client_update_appointment_unauthorized(self):
         
         payload = {
                     "artist": 2
@@ -484,7 +484,7 @@ class TattooShopTestCase(unittest.TestCase):
                                   )
         data = json.loads(res.data)
 
-        self.assertTrue(res.status_code, 403)
+        self.assertTrue(res.status_code, 401)
         self.assertEqual(data['success'], False)
         self.assertTrue(data['message'])
 
@@ -509,7 +509,7 @@ class TattooShopTestCase(unittest.TestCase):
                          )
 
     # Test artist unable to delete a client
-    def test_artist_delete_client_forbidden(self):
+    def test_artist_delete_client_unauthorized(self):
         
         res = self.client().delete('/api/clients/2',
                                    headers={
