@@ -5,6 +5,7 @@ from flask_cors import CORS
 from datetime import datetime
 import json
 from models import setup_db, Artist, Client, Appointment
+from auth.auth import requires_auth, AuthError
 
 
 '''
@@ -89,16 +90,14 @@ def create_app(test_config=None):
     @app.after_request
     def after_request(response):
         response.headers.add('ACCESS-CONTROL-ALLOW-HEADERS',
-                             'Content-Type,Authorization,true')
+                                'Content-Type,Authorization,true')
         response.headers.add('ACCESS-CONTROL-ALLOW-METHODS',
-                             'POST,GET,PATCH,DELETE')
+                                'POST,GET,PATCH,DELETE')
         return response
 
     @app.route('/')
     def index():
-        return jsonify({
-            'date': datetime(2021, 3, 6, 12, 30)
-        })
+        return "Healthy"
 
     '''
     GET Endpoints for Artist, Client, Appointment
@@ -129,7 +128,8 @@ def create_app(test_config=None):
 
     # return all clients formatted
     @app.route('/api/clients')
-    def all_clients():
+    @requires_auth('get:all')
+    def all_clients(payload):
 
         clients = Client.query.all()
         size = len(clients)
@@ -148,7 +148,8 @@ def create_app(test_config=None):
 
     # Return a single client according to client id
     @app.route('/api/clients/<client_id>')
-    def single_client(client_id):
+    @requires_auth('get:all')
+    def single_client(payload, client_id):
         
         # Check for artist in database
         check_for_client(client_id)
@@ -162,7 +163,8 @@ def create_app(test_config=None):
 
     # Return a single appointment according to id
     @app.route('/api/appointments/<appt_id>')
-    def single_appointment(appt_id):
+    @requires_auth('get:appointment')
+    def single_appointment(payload, appt_id):
 
         # Check for appointment in datbase
         check_for_appointment(appt_id)
@@ -179,7 +181,8 @@ def create_app(test_config=None):
     '''
     # Post endpoint for creating artists
     @app.route('/api/artists', methods=['POST'])
-    def create_artist():
+    @requires_auth('create:artist')
+    def create_artist(payload):
         # Get values from request
         body = request.get_json()
         name = body.get('name', None)
@@ -220,7 +223,8 @@ def create_app(test_config=None):
 
     # Post endoint for creating clients
     @app.route('/api/clients', methods=['POST'])
-    def create_client():
+    @requires_auth('create:client')
+    def create_client(payload):
         # Get values from request and create a new client object
         body = request.get_json()
         name = body.get('name', None)
@@ -258,7 +262,8 @@ def create_app(test_config=None):
 
     # Post endoint for creating appointments
     @app.route('/api/appointments', methods=['POST'])
-    def create_appointment():
+    @requires_auth('create:appointment')
+    def create_appointment(payload):
         # Get values from the request
         body = request.get_json()
         artist_id = body.get('artist', None)
@@ -272,9 +277,9 @@ def create_app(test_config=None):
         appointment_date = format_datetime(appt_date)
 
         new_appt = Appointment(client=client_id,
-                               artist=artist_id,
-                               appointment_date=appointment_date
-                               )
+                                artist=artist_id,
+                                appointment_date=appointment_date
+                                )
         # Insert the new appointment into the database
         try:
             new_appt.insert()
@@ -284,8 +289,8 @@ def create_app(test_config=None):
         # Get the appointment in the database by matching the artist
         # and appointment time
         posted_appt = Appointment.query.filter(
-                                               Appointment.artist == new_appt.artist
-                                               ).filter(
+                                                Appointment.artist == new_appt.artist
+                                                ).filter(
                                                         Appointment.appointment_date == new_appt.appointment_date
                                                         ).order_by(Appointment.id).all()[-1]
         
@@ -294,7 +299,7 @@ def create_app(test_config=None):
         # Return an array containing all upcoming appointments
         now = datetime.now()
         upcoming_appointments = Appointment.query.filter(
-                                                         Appointment.appointment_date > now
+                                                            Appointment.appointment_date > now
                                                         ).all()
         return jsonify({
                         'success': True,
@@ -308,7 +313,8 @@ def create_app(test_config=None):
 
     # Patch endpoint for updating an artist
     @app.route('/api/artists/<artist_id>', methods=['PATCH'])
-    def update_artist(artist_id):
+    @requires_auth('update:artist')
+    def update_artist(payload, artist_id):
         body = request.get_json()
 
         # Check database for client
@@ -339,7 +345,8 @@ def create_app(test_config=None):
 
     # Patch endpoint for updating a client
     @app.route('/api/clients/<client_id>', methods=['PATCH'])
-    def update_client(client_id):
+    @requires_auth('update:client')
+    def update_client(payload, client_id):
 
         body = request.get_json()
         # Check database for client
@@ -368,7 +375,8 @@ def create_app(test_config=None):
 
     # Patch endpoint for updating an appointment
     @app.route('/api/appointments/<appt_id>', methods=['PATCH'])
-    def update_appointment(appt_id):
+    @requires_auth('update:appointment')
+    def update_appointment(payload, appt_id):
 
         body = request.get_json()
 
@@ -414,7 +422,8 @@ def create_app(test_config=None):
 
     # DELETE endpoint for a single artist
     @app.route('/api/artists/<artist_id>', methods=['DELETE'])
-    def delete_artist(artist_id):
+    @requires_auth('delete:artist')
+    def delete_artist(payload, artist_id):
 
         # Check database for artist
         check_for_artist(artist_id)
@@ -436,7 +445,8 @@ def create_app(test_config=None):
 
     # DELETE endpoint for a single client
     @app.route('/api/clients/<client_id>', methods=['DELETE'])
-    def delete_client(client_id):
+    @requires_auth('delete:client')
+    def delete_client(payload, client_id):
 
         # Check database for client
         check_for_client(client_id)
@@ -458,7 +468,8 @@ def create_app(test_config=None):
 
     # DELETE endpoint for a single appointment
     @app.route('/api/appointments/<appt_id>', methods=['DELETE'])
-    def delete_appointment(appt_id):
+    @requires_auth('delete:appointment')
+    def delete_appointment(payload, appt_id):
 
         # Check database for appointment
         check_for_appointment(appt_id)
@@ -471,7 +482,7 @@ def create_app(test_config=None):
             abort(422)
         now = datetime.now()
         upcoming_appointments = Appointment.query.filter(
-                                                         Appointment.appointment_date > now
+                                                            Appointment.appointment_date > now
                                                         ).all()
 
         return jsonify({
@@ -486,40 +497,55 @@ def create_app(test_config=None):
     @app.errorhandler(400)
     def bad_request(error):
         return jsonify({
-          'success': False,
-          'error': 400,
-          'message': 'Bad Request'
+            'success': False,
+            'error': 400,
+            'message': 'Bad Request'
         }), 400
+
+    @app.errorhandler(401)
+    def unauthorized(error):
+        return jsonify({
+                        'success': False,
+                        'error': 401,
+                        'message': 'Unauthorized request'
+                        }), 401
+                    
+    @app.errorhandler(403)
+    def forbidden(error):
+        return jsonify({
+                        'success': False,
+                        'error': 403,
+                        'message': "Forbidden request"
+                        })
 
     @app.errorhandler(404)
     def not_found(error):
         return jsonify({
-          'success': False,
-          'error': 404,
-          'message': 'Resource Not Found',
+            'success': False,
+            'error': 404,
+            'message': 'Resource Not Found',
         }), 404
 
     @app.errorhandler(422)
     def unprocessable_request(error):
         return jsonify({
-          'success': False,
-          'error': 422,
-          'message': 'Unprocessable Request'
+            'success': False,
+            'error': 422,
+            'message': 'Unprocessable Request'
         }), 422
 
     @app.errorhandler(500)
     def unprocessable_request(error):
         return jsonify({
-          'success': False,
-          'error': 500,
-          'message': 'Internal Server Error'
+            'success': False,
+            'error': 500,
+            'message': 'Internal Server Error'
         }), 500
-
-
+    
     return app
-
 
 APP = create_app()
 
 if __name__ == '__main__':
     APP.run(host='0.0.0.0', port=8080, debug=True)
+
