@@ -15,14 +15,18 @@ AuthError Exception
 A standardized way to communicate auth failure modes
 '''
 
+
 class AuthError(Exception):
     def __init__(self, error, status_code):
         self.error = error
         self.status_code = status_code
 
+
 '''
 Get the authorization token from the request header
 '''
+
+
 def get_token_auth_header():
 
     auth = request.headers.get("Authorization", None)
@@ -48,25 +52,30 @@ def get_token_auth_header():
 
     return header_parts[1]
 
+
 '''
 Check the authorization token for the required permissions
 to access the requested endpoint
 '''
 
+
 def check_permissions(permission, payload):
 
     if 'permissions' not in payload:
         abort(401)
-    
+
     if permission not in payload['permissions']:
         abort(401)
 
     return True
 
+
 '''
 Token decoder to validate the token uses Auth0 and
 return the decoded payload
 '''
+
+
 def verify_decode_jwt(token):
     jsonurl = urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
     jwks = json.loads(jsonurl.read())
@@ -120,9 +129,11 @@ def verify_decode_jwt(token):
                 'description': 'Unable to find the appropriate key.'
             }, 400)
 
+
 '''
 Requires Authorization decorator method used to validate requests
 '''
+
 
 def requires_auth(permission=''):
     def requires_auth_decorator(f):

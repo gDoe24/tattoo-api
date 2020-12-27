@@ -13,6 +13,8 @@ Common functions used in the app
 '''
 CLIENTS_PER_PAGE = 10
 # Paginate Clients
+
+
 def paginate_clients(request, clients):
     page = request.args.get('page', 1, type=int)
     start = (page - 1)*CLIENTS_PER_PAGE
@@ -23,6 +25,7 @@ def paginate_clients(request, clients):
 
     return current_clients
 
+
 # Format date string and check if correct datetime format
 def format_datetime(date_time):
     if date_time is None:
@@ -32,6 +35,7 @@ def format_datetime(date_time):
     except:
         abort(422)
 
+
 # Check database for artist
 def check_for_artist(artist):
     if artist is None:
@@ -40,6 +44,7 @@ def check_for_artist(artist):
     check_artist = Artist.query.get(artist)
     if check_artist is None:
         abort(404)
+
 
 # Check database for client
 def check_for_client(client):
@@ -51,6 +56,7 @@ def check_for_client(client):
     if check_client is None:
         abort(404)
 
+
 # Check database for appointment
 def check_for_appointment(appt):
     if appt is None:
@@ -60,25 +66,31 @@ def check_for_appointment(appt):
     if check_appt is None:
         abort(404)
 
+
 # Format an artist
 def format_artist(artist_id):
     artist = Artist.query.get(artist_id)
     return artist.format()
+
 
 # Format a client
 def format_client(client_id):
     client = Client.query.get(client_id)
     return client.format()
 
+
 # Format an appointment
 def format_appointment(appt_id):
     appt = Appointment.query.get(appt_id)
     return appt.format()
 
+
 '''
 # Primary handler of the application
 # Contains Endpoints, CORS, Errors
 '''
+
+
 def create_app(test_config=None):
 
     # create and configure the app, database, and CORS headers
@@ -90,9 +102,9 @@ def create_app(test_config=None):
     @app.after_request
     def after_request(response):
         response.headers.add('ACCESS-CONTROL-ALLOW-HEADERS',
-                                'Content-Type,Authorization,true')
+                             'Content-Type,Authorization,true')
         response.headers.add('ACCESS-CONTROL-ALLOW-METHODS',
-                                'POST,GET,PATCH,DELETE')
+                             'POST,GET,PATCH,DELETE')
         return response
 
     @app.route('/')
@@ -112,10 +124,11 @@ def create_app(test_config=None):
                         'artists': artists,
                         'total_artists': len(artists)
                         })
+
     # Return a single artist according to artist id
     @app.route('/api/artists/<artist_id>')
     def single_artist(artist_id):
-        
+
         # Check for artist in database
         check_for_artist(artist_id)
         # Get the artist and return formatted artist
@@ -150,7 +163,7 @@ def create_app(test_config=None):
     @app.route('/api/clients/<client_id>')
     @requires_auth('get:all')
     def single_client(payload, client_id):
-        
+
         # Check for artist in database
         check_for_client(client_id)
         # Get the artist and return formatted artist
@@ -270,16 +283,17 @@ def create_app(test_config=None):
         client_id = body.get('client', None)
         appt_date = body.get('appointment_date', None)
 
-        # Appointment will not be created if it does not include an appointment date
+        # Appointment will not be created if it does not
+        # include an appointment date
         if appt_date is None:
             abort(422)
 
         appointment_date = format_datetime(appt_date)
 
         new_appt = Appointment(client=client_id,
-                                artist=artist_id,
-                                appointment_date=appointment_date
-                                )
+                               artist=artist_id,
+                               appointment_date=appointment_date
+                               )
         # Insert the new appointment into the database
         try:
             new_appt.insert()
@@ -293,14 +307,14 @@ def create_app(test_config=None):
                                                 ).filter(
                                                         Appointment.appointment_date == new_appt.appointment_date
                                                         ).order_by(Appointment.id).all()[-1]
-        
+
         formatted_appt = posted_appt.format()
 
         # Return an array containing all upcoming appointments
         now = datetime.now()
         upcoming_appointments = Appointment.query.filter(
-                                                            Appointment.appointment_date > now
-                                                        ).all()
+                                                         Appointment.appointment_date > now
+                                                         ).all()
         return jsonify({
                         'success': True,
                         'appointment': formatted_appt,
@@ -482,7 +496,7 @@ def create_app(test_config=None):
             abort(422)
         now = datetime.now()
         upcoming_appointments = Appointment.query.filter(
-                                                            Appointment.appointment_date > now
+                                                         Appointment.appointment_date > now
                                                         ).all()
 
         return jsonify({
@@ -509,7 +523,7 @@ def create_app(test_config=None):
                         'error': 401,
                         'message': 'Unauthorized request'
                         }), 401
-                    
+
     @app.errorhandler(403)
     def forbidden(error):
         return jsonify({
@@ -541,11 +555,11 @@ def create_app(test_config=None):
             'error': 500,
             'message': 'Internal Server Error'
         }), 500
-    
+
     return app
+
 
 APP = create_app()
 
 if __name__ == '__main__':
     APP.run(host='0.0.0.0', port=8080, debug=True)
-
