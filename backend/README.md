@@ -21,18 +21,25 @@ This is an object representing a tattoo artist. This API allows you to retrieve 
 
 **id** `integer`
 Unique identifier for the object
+
 **email**  `string`
 The tattoo artist's email address
+
 **image_link** `string`
 Link to the primary image for the tattooer
+
 **instagram_link** `string`
 Link to the tattoo artist's instagram
+
 **name** `string`
 The name of the tattoo artist
+
 **phone** `string`
 The artist's phone number
+
 **styles** `string`
 The style in which the artist specializes in
+
 ```
 "artist": {
         "email": "lebron_jaimes@aol.com",
