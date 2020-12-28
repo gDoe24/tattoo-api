@@ -20,25 +20,25 @@ This is an object representing a tattoo artist. This API allows you to retrieve 
 ##### Attributes
 
 **id** `integer`
-Unique identifier for the object
+> Unique identifier for the object
 
 **email**  `string`
-The tattoo artist's email address
+> The tattoo artist's email address
 
 **image_link** `string`
-Link to the primary image for the tattooer
+> Link to the primary image for the tattooer
 
 **instagram_link** `string`
-Link to the tattoo artist's instagram
+> Link to the tattoo artist's instagram
 
 **name** `string`
-The name of the tattoo artist
+> The name of the tattoo artist
 
 **phone** `string`
-The artist's phone number
+> The artist's phone number
 
 **styles** `string`
-The style in which the artist specializes in
+> The style in which the artist specializes in
 
 ```
 "artist": {
