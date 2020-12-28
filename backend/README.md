@@ -81,7 +81,7 @@ This is an object representing a tattoo artist. This API allows you to retrieve 
     "total_artists": 4
 }
 ```
-### GET /api/artists/<artist_id>
+#### GET /api/artists/<artist_id>
 
 *   Fetches an artist object matching the artist id specified in the URI
 *   Returns: a single artist object 
@@ -100,6 +100,85 @@ This is an object representing a tattoo artist. This API allows you to retrieve 
     "success": true
 }
 ```
+#### POST /api/artists
+
+*   Create a new tattoo artist resource
+*   Parameters
+    *   name **required**
+    *   phone
+    *   email
+    *   instagram_link
+    *   styles
+    *   image_link
+*   EX. curl http://127.0.0.1:5000/api/artists -X POST \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $MANAGER_JWT" \
+    -d '{ "name": "Tony Montana", "phone": "123-456-7891", "styles": "Neo-Traditional", \
+    "image_link": "fakepic@unsplash.com", "instagram_link": "fakeig123@instagram.com", \
+    "email": "TonyMontana@hotmail.com" }'
+
+Returns:
+```
+{
+    "artist": {
+        "email": "TonyMontana@hotmail.com",
+        "id": 5,
+        "image_link": "fakepic@unsplash.com",
+        "instagram_link": "fakeig123@instagram.com",
+        "name": "Tony Montana",
+        "phone": "123-456-7891",
+        "styles": "Neo-Traditional"
+    },
+    "success": true,
+    "total_artists": 5
+}
+```
+#### PATCH /api/artists/<artist_id>
+
+*   Updates the specified tattoo artist matching the artist_id in the URI by passing in parameters with new values. Any parameters not specified will not be changed.
+*   Parameters
+    *   name 
+    *   phone
+    *   email
+    *   instagram_link
+    *   styles
+    *   image_link
+*   Ex. curl http://127.0.0.1:5000/api/artists/3 -X PATCH \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $MANAGER_JWT" \
+    -d '{"phone": "901-212-4321", "email": "creative_genius@aol.com"}'
+
+Returns
+```
+{
+    "artist": {
+        "email": "creative_genius@aol.com",
+        "id": 3,
+        "image_link": "NULL",
+        "instagram_link": "NULL",
+        "name": "Dwyane",
+        "phone": "901-212-4321",
+        "styles": "Japenese"
+    },
+    "success": true
+}
+```
+
+#### DELETE /api/artists/<artist_id>
+
+*   Delete an existing artist from the database specified by the artist_id in the URI. This action also deletes any existing appointments the tattoo artist had scheduled
+*   Ex. curl http://127.0.0.1:5000/api/artists/3 -X DELETE \
+    -H "Authorization: Bearer $MANAGER_JWT" \
+
+Returns:
+```
+{
+    "deleted_artist_id": 5,
+    "success": true,
+    "total_artists": 4
+}
+```
+
 ### GET /api/clients
 
 *   Fetches a dictionary object of paginated clients
@@ -155,33 +234,7 @@ This is an object representing a tattoo artist. This API allows you to retrieve 
     "success": true
 }
 ```
-### POST /api/artists
-```
-{
-    "name": "Tony Montana",
-    "phone": "123-456-7891",
-    "styles": "Neo-Traditional",
-    "image_link": "fakepic@unsplash.com",
-    "instagram_link": "fakeig123@instagram.com",
-    "email": "TonyMontana@hotmail.com"
-}
-```
-Returns
-```
-{
-    "artist": {
-        "email": "TonyMontana@hotmail.com",
-        "id": 5,
-        "image_link": "fakepic@unsplash.com",
-        "instagram_link": "fakeig123@instagram.com",
-        "name": "Tony Montana",
-        "phone": "123-456-7891",
-        "styles": "Neo-Traditional"
-    },
-    "success": true,
-    "total_artists": 5
-}
-```
+
 ### POST /api/clients
 ```
 {
@@ -226,29 +279,7 @@ Returns
     "total_upcoming_appointments": 5
 }
 ```
-### PATCH /api/artists/<artist_id>
-```
-{
-    "phone": "901-212-4321",
-    "email": "creative_genius@aol.com"
 
-}
-```
-Returns
-```
-{
-    "artist": {
-        "email": "creative_genius@aol.com",
-        "id": 3,
-        "image_link": "NULL",
-        "instagram_link": "NULL",
-        "name": "Dwyane",
-        "phone": "901-212-4321",
-        "styles": "Japenese"
-    },
-    "success": true
-}
-```
 ### PATCH /api/clients/<client_id>
 ```
 {
@@ -287,14 +318,7 @@ Returns
     "success": true
 }
 ```
-### DELETE /api/artists/<artist_id>
-```
-{
-    "deleted_artist_id": 5,
-    "success": true,
-    "total_artists": 4
-}
-```
+
 ### DELETE /api/clients/<client_id>
 ```
 {
