@@ -1,7 +1,7 @@
 README dedicated to setting up the backend environment :)
 
 
-## Endpoints
+## Resources/Endpoints
 
 ### GET /
 
@@ -12,11 +12,43 @@ README dedicated to setting up the backend environment :)
     'Healthy'
 }
 ```
-### GET /api/aritsts
 
-*   Fetches a dictionary object of all artists in the database
-*   Returns: array of artists containing key:value pairs of email, id, image_link, instagram_link,
-    name, phone, and artists styles; and the total amount of artists in the database
+### Artist
+
+This is an object representing a tattoo artist. This API allows you to retrieve a single artist, or a group of all artists in the database. You can also create, update and delete an artist (with the allowed permissions) using the POST, PATCH, and DELETE methods respectively.
+
+##### Attributes
+
+**id** `integer`
+Unique identifier for the object
+**email**  `string`
+The tattoo artist's email address
+**image_link** `string`
+Link to the primary image for the tattooer
+**instagram_link** `string`
+Link to the tattoo artist's instagram
+**name** `string`
+The name of the tattoo artist
+**phone** `string`
+The artist's phone number
+**styles** `string`
+The style in which the artist specializes in
+```
+"artist": {
+        "email": "lebron_jaimes@aol.com",
+        "id": 2,
+        "image_link": "https://unsplash.com/photos/zfasedr13",
+        "instagram_link": "https://instagram.com/lebronjaimes24",
+        "name": "Lebron",
+        "phone": "142-323-6123",
+        "styles": "Traditional"
+    }
+```
+
+#### GET /api/aritsts
+
+*   Retrieves all artists in the database
+*   Returns an array of artist objects and the total number of artists in the database
 ```
 {
     "artists": [
@@ -44,9 +76,8 @@ README dedicated to setting up the backend environment :)
 ```
 ### GET /api/artists/<artist_id>
 
-*   Fetches a dictionary object of the artist matching the artist id specified in the URI
-*   Returns: a single dictionary object containing key:value pairs of email, id, image_link, instagram_link,
-    name, phone number, and artist styles
+*   Fetches an artist object matching the artist id specified in the URI
+*   Returns: a single artist object 
 
 ```
 {
@@ -91,6 +122,8 @@ README dedicated to setting up the backend environment :)
 }
 ```
 ### GET /api/clients/<client_id>
+
+*   
 ```
 {
     "client": {
