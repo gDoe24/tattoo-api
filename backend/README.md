@@ -3,9 +3,10 @@ README dedicated to setting up the backend environment :)
 
 ## Resources/Endpoints
 
-### GET /
+#### GET /
 
 *   Returns "Healthy" if the api is up and running properly
+*   curl http://127.0.0.1:5000/
 
 ```
 {
@@ -56,7 +57,7 @@ This is an object representing a tattoo artist. This API allows you to retrieve 
 
 *   Retrieves all artists in the database
 *   Returns an array of artist objects and the total number of artists in the database
-*   curl http://127.0.0.1:5000/api/artists
+`curl http://127.0.0.1:5000/api/artists`
 
 Returns:
 ```
@@ -89,7 +90,8 @@ Returns:
 
 *   Fetches the artist resource matching the artist_id specified in the URI
 *   Returns: a single artist object
-*   curl http://127.0.0.1:5000/api/artists/2
+
+`curl http://127.0.0.1:5000/api/artists/2`
 
 Returns:
 ```
@@ -116,12 +118,15 @@ Returns:
     *   instagram_link
     *   styles
     *   image_link
-*   curl http://127.0.0.1:5000/api/artists -X POST \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer $MANAGER_JWT" \
-    -d '{ "name": "Tony Montana", "phone": "123-456-7891", "styles": "Neo-Traditional", \
-    "image_link": "fakepic@unsplash.com", "instagram_link": "fakeig123@instagram.com", \
-    "email": "TonyMontana@hotmail.com" }'
+
+```
+curl http://127.0.0.1:5000/api/artists -X POST \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer $MANAGER_JWT" \
+-d '{ "name": "Tony Montana", "phone": "123-456-7891", "styles": "Neo-Traditional", \
+"image_link": "fakepic@unsplash.com", "instagram_link": "fakeig123@instagram.com", \
+"email": "TonyMontana@hotmail.com" }'
+```
 
 Returns:
 ```
@@ -149,10 +154,13 @@ Returns:
     *   instagram_link
     *   styles
     *   image_link
-*   curl http://127.0.0.1:5000/api/artists/3 -X PATCH \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer $MANAGER_JWT" \
-    -d '{"phone": "901-212-4321", "email": "creative_genius@aol.com"}'
+
+```
+curl http://127.0.0.1:5000/api/artists/3 -X PATCH \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer $MANAGER_JWT" \
+-d '{"phone": "901-212-4321", "email": "creative_genius@aol.com"}'
+```
 
 Returns
 ```
@@ -173,8 +181,11 @@ Returns
 #### DELETE /api/artists/<artist_id>
 
 *   Delete an existing artist from the database specified by the artist_id in the URI. This action also deletes any existing appointments the tattoo artist had scheduled
-*   curl http://127.0.0.1:5000/api/artists/3 -X DELETE \
-    -H "Authorization: Bearer $MANAGER_JWT" 
+
+```
+curl http://127.0.0.1:5000/api/artists/3 -X DELETE \
+-H "Authorization: Bearer $MANAGER_JWT" 
+```
 
 Returns:
 ```
@@ -220,8 +231,11 @@ This object represents a client in the tattoo shop's database. The API allows fo
 
 *   Fetches a paginated list of clients
 *   Returns an array of client objects for all clients in the database and the total number of clients
-*   curl http://127.0.0.1:5000/api/clients \
-    -H "Authorization: Bearer $MANAGER_JWT"
+
+```
+curl http://127.0.0.1:5000/api/clients \
+-H "Authorization: Bearer $MANAGER_JWT"
+```
 
 Returns:
 ```
@@ -250,8 +264,11 @@ Returns:
 
 *   Retrieve the client resource matching the client_id specified in the URI
 *   Returns respective client object
-*   curl http://127.0.0.1:5000/api/clients/1 \
-    -H "Authorization: Bearer $MANAGER_JWT"
+
+```
+curl http://127.0.0.1:5000/api/clients/1 \
+-H "Authorization: Bearer $MANAGER_JWT"
+```
 
 Returns:
 ```
@@ -270,10 +287,13 @@ Returns:
 
 *   Create a new client resource in the database
 *   Returns the newly created client object and the total number of clients now in the database
-*   curl http://127.0.0.1:5000/api/clients \
-    -H "Authorization: Bearer $MANAGER_JWT" \
-    -H "Content-Type: application/json" \
-    -d '{ "name": "Joe Schmo", "phone": "231-124-1412", "email": "", "address": ""}
+
+```
+curl http://127.0.0.1:5000/api/clients \
+-H "Authorization: Bearer $MANAGER_JWT" \
+-H "Content-Type: application/json" \
+-d '{ "name": "Joe Schmo", "phone": "231-124-1412", "email": "", "address": ""}
+```
 
 Returns:
 ```
@@ -293,10 +313,13 @@ Returns:
 
 *   Update the existing client specified by the client_id in the URI. Any parameters not specified will not be updated
 *   Returns the updated client object
-*   curl http://127.0.0.1:5000/api/clients/3 \
-    -H "Authorization: Bearer $MANAGER_JWT" \
-    -H "Content-Type: application/json" \
-    -d '{"phone": "770-231-4234", "email": "simplord12@gmail.com"}
+
+```
+curl http://127.0.0.1:5000/api/clients/3 \
+-H "Authorization: Bearer $MANAGER_JWT" \
+-H "Content-Type: application/json" \
+-d '{"phone": "770-231-4234", "email": "simplord12@gmail.com"}
+```
 
 Returns:
 ```
@@ -315,8 +338,11 @@ Returns:
 
 *   Permanently deletes the client resource specified in the URI by the client_id
 *   Returns the deleted client's id along with the total number of clients remaining in the database
-*   curl curl http://127.0.0.1:5000/api/clients/6 \
-    -H "Authorization: Bearer $MANAGER_JWT"
+
+```
+curl curl http://127.0.0.1:5000/api/clients/6 \
+-H "Authorization: Bearer $MANAGER_JWT"
+```
 
 Returns:
 ```
@@ -358,8 +384,11 @@ Tattoo artists and clients use the appointment object to set a date and time for
 
 *   Retrives the appointment resource specified by the appointment_id in the URI
 *   Returns the respective appointment object
-*   curl http://127.0.0.1:5000/api/appointments/id \
-    -H 'Authorization: Bearer $MANAGER_JWT'
+
+```
+curl http://127.0.0.1:5000/api/appointments/id \
+-H 'Authorization: Bearer $MANAGER_JWT'
+```
 
 Returns: 
 ```
@@ -379,10 +408,13 @@ Returns:
 
 *   Create a new appointment resource in the database
 *   Returns the newly created appointment object and the total number of upcoming appointments
-*   curl http://127.0.0.1:5000/api/appointments -X POST \
-    -H 'Authorization: Bearer $MANAGER_JWT' \
-    -H 'Content-Type: application/json' \
-    -d '{"client": 1, "artist": 1, "appointment_date": "Mon, 06 Mar 2021 14:30:00 GMT"}'
+
+```
+curl http://127.0.0.1:5000/api/appointments -X POST \
+-H 'Authorization: Bearer $MANAGER_JWT' \
+-H 'Content-Type: application/json' \
+-d '{"client": 1, "artist": 1, "appointment_date": "Mon, 06 Mar 2021 14:30:00 GMT"}'
+```
 
 Returns
 ```
@@ -403,10 +435,13 @@ Returns
 
 *   Update an existing appointment specified in the URI by the appointment_id. Any parameters not specified will not be changed.
 *   Returns the appointment object
-*   curl http://127.0.0.1:5000/api/appointments/3 -X PATCH \
-    -H 'Authorization: Bearer $MANAGER_JWT' \
-    -H 'Content-Type: application/json' \
-    -d '{ "appointment_date": "Sat, 06 Jun 2021 14:30:00 GMT" }'
+
+```
+curl http://127.0.0.1:5000/api/appointments/3 -X PATCH \
+-H 'Authorization: Bearer $MANAGER_JWT' \
+-H 'Content-Type: application/json' \
+-d '{ "appointment_date": "Sat, 06 Jun 2021 14:30:00 GMT" }'
+```
 
 Returns:
 ```
@@ -426,8 +461,11 @@ Returns:
 
 *   Permanently delete an existing appointment resource from the database
 *   Returns the id of the deleted appointment along with the total number of upcoming appointments
-*   curl http://127.0.0.1:5000/api/appointments/3 -X DELETE \
-    -H 'Authorization: Bearer $MANAGER_JWT'
+
+```
+curl http://127.0.0.1:5000/api/appointments/3 -X DELETE \
+-H 'Authorization: Bearer $MANAGER_JWT'
+```
 
 Returns:
 ```
