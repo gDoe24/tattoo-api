@@ -1,8 +1,112 @@
 README dedicated to setting up the backend environment :)
 
+## Getting Started
+
+### Installing Dependencies
+
+#### Python 3.7
+
+Follow instructions to install the latest version of python for your platform in the [python docs](https://docs.python.org/3/using/unix.html#getting-and-installing-the-latest-version-of-python)
+
+#### Virtual Enviornment
+
+We recommend working within a virtual environment whenever using Python for projects. This keeps your dependencies for each project separate and organaized. Instructions for setting up a virual enviornment for your platform can be found in the [python docs](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
+
+#### PIP Dependencies
+
+Once you have your virtual environment setup and running, install dependencies by naviging to the `/backend` directory and running:
+
+```bash
+pip install -r requirements.txt
+```
+
+This will install all of the required packages we selected within the `requirements.txt` file.
+
+##### Key Dependencies
+
+- [Flask](http://flask.pocoo.org/)  is a lightweight backend microservices framework. Flask is required to handle requests and responses.
+
+- [SQLAlchemy](https://www.sqlalchemy.org/) is the Python SQL toolkit and ORM we'll use handle the lightweight sqlite database. You'll primarily work in app.py and can reference models.py. 
+
+- [Flask-CORS](https://flask-cors.readthedocs.io/en/latest/#) is the extension we'll use to handle cross origin requests from our frontend server. 
+
+- [Flask-Migrate](https://flask-migrate.readthedocs.io/en/latest/) is used to handle the SQLAlchemy migrations for Flask applications using Alembic
+
+## Database Setup
+With Postgres running, restore a database using the tattoo_shop.psql file provided. From the backend folder in terminal run:
+```bash
+psql tattoo_shop < tattoo_shop.psql
+```
+
+
+## Running the server
+
+From within the `backend` directory first ensure you are working using your created virtual environment.
+
+To run the server, execute:
+
+```bash
+export FLASK_APP=flaskr
+export FLASK_ENV=development
+flask run
+```
+
+Setting the `FLASK_ENV` variable to `development` will detect file changes and restart the server automatically.
+
+Setting the `FLASK_APP` variable to `flaskr` directs flask to use the `flaskr` directory and the `__init__.py` file to find the application. 
+
+## API Reference
+
+### Getting Started
+
+BASE URL: The backend is hosted at the default URL, http://127.0.0.1:5000
+
+### Authorization
+
+The Tattoo Shop API uses the Auth0 ([see docs](https://auth0.com/docs/)) API for authorizing role based authentication. The three roles associated with the Tattoo Shop Api from least priveleged to most priveleged are:
+
+1. Client
+    * Endpoint Accessibility
+        * GET
+            * /api/appointment/appointment_id
+2. Artist
+    * Endpoint Accessibility
+        * GET
+            * The tattoo artist has access to all GET endpoints
+        * POST
+            * /api/clients
+            * /api/appointments
+        * PATCH
+            * /api/clients
+            * /api/appointments
+3. Manager
+    * The tattoo shop manager has access to all API endpointss
+    
+*No authorization is required for GET /api/artists or /api/artists/artist_id endpoints*
+
+### Errors
+
+Errors are returned as JSON objects in the following format:
+
+```
+{
+  "error": 404, 
+  "message": "Resource Not Found", 
+  "success": false
+}
+```
+The API recognizes three error types for failed requests:
+
+* 400
+* 401
+* 403
+* 404
+* 422
+* 500
 
 ## Resources/Endpoints
 
+*Note: In order to use many of the following endpoints, you will need to obtain the necessary json web tokens in accordance with the endpoint's authorization restrictions. See [developer section](#developers) for more details*
 #### GET /
 
 *   Returns "Healthy" if the api is up and running properly
@@ -373,13 +477,14 @@ Tattoo artists and clients use the appointment object to set a date and time for
 > The date and time of the appointment
 > Formatted example: "Mon, 24 Jun 2021 12:00:00 GMT"
 
+```
 {
     "id": 1,
     "artist": 1,
     "client": 1,
     "appointment_date": "Sat, 21 Mar 2021 12:00:00 GMT",
 }
-
+```
 #### GET /api/appointments/<appointment_id>
 
 *   Retrives the appointment resource specified by the appointment_id in the URI
@@ -475,3 +580,9 @@ Returns:
     "total_upcoming_appointments": 4
 }
 ```
+
+## Developers
+
+### Testing
+
+The Tattoo Shop API uses role based authentication to verify json web tokens passed in by the request header. In order to utilize these endpoints in testing, you will need to set the environment variables for the CLIENT_JWT, ARTIST_JWT, and MANAGER_JWT.
