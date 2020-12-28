@@ -4,12 +4,19 @@ README dedicated to setting up the backend environment :)
 ## Endpoints
 
 ### GET /
+
+*   Returns "Healthy" if the api is up and running properly
+
 ```
 {
     'Healthy'
 }
 ```
 ### GET /api/aritsts
+
+*   Fetches a dictionary object of all artists in the database
+*   Returns: array of artists containing key:value pairs of email, id, image_link, instagram_link,
+    name, phone, and artists styles; and the total amount of artists in the database
 ```
 {
     "artists": [
@@ -37,6 +44,10 @@ README dedicated to setting up the backend environment :)
 ```
 ### GET /api/artists/<artist_id>
 
+*   Fetches a dictionary object of the artist matching the artist id specified in the URI
+*   Returns: a single dictionary object containing key:value pairs of email, id, image_link, instagram_link,
+    name, phone number, and artist styles
+
 ```
 {
     "artist": {
@@ -52,6 +63,11 @@ README dedicated to setting up the backend environment :)
 }
 ```
 ### GET /api/clients
+
+*   Fetches a dictionary object of paginated clients
+*   Returns an array for all clients containing a dictionary of client key:value pairs for each 
+    client's id, address, email, name, and phone number
+
 ```
 {
     "clients": [
