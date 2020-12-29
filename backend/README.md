@@ -106,7 +106,7 @@ The API recognizes three error types for failed requests:
 
 ## Resources/Endpoints
 
-*Note: In order to use many of the following endpoints, you will need to obtain the necessary json web tokens in accordance with the endpoint's authorization restrictions. See [developer section](#developers) for more details*
+*Note: In order to use many of the following endpoints, you will need to obtain the necessary json web tokens in accordance with the endpoint's authorization restrictions. See [testing section](#testing) for more details*
 #### GET /
 
 *   Returns "Healthy" if the api is up and running properly
@@ -581,8 +581,25 @@ Returns:
 }
 ```
 
-## Developers
 
-### Testing
+## Testing
 
 The Tattoo Shop API uses role based authentication to verify json web tokens passed in by the request header. In order to utilize these endpoints in testing, you will need to set the environment variables for the CLIENT_JWT, ARTIST_JWT, and MANAGER_JWT.
+
+To accomplish this, we will need to log into the application through Auth0 and grab the json web token that is returned in the url. [Click here](https://fsnd-8.us.auth0.com/authorize?audience=https://tattoo-api&response_type=token&client_id=PpM2OEplVJlEyE5xx3vLSb7RmMmQdF1C&redirect_uri=https://localhost:8100/) to log in.
+
+Next, we will set the environment variables for the corresponding role.
+
+```bash
+export MANAGER_JWT='returned web token'
+export CLIENT_JWT='returned web token'
+export ARTIST_JWT='returned web token'
+```
+
+To run tests using the test database file provided, with Postgres running, enter the commands:
+
+```bash
+psql createdb test_tattoo_shop
+psql test_tattoo_shop < test_tattoo_shop.psql
+python test_app.py
+```
