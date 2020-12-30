@@ -6,8 +6,11 @@ from flask_sqlalchemy import SQLAlchemy
 
 from app import create_app
 from models import setup_db, Artist, Client, Appointment
-from config import MANAGER_JWT, CLIENT_JWT, ARTIST_JWT
 
+
+MANAGER_JWT = os.environ.get("MANAGER_JWT")
+CLIENT_JWT = os.environ.get("CLIENT_JWT")
+ARTIST_JWT = os.environ.get("ARTIST_JWT")
 
 class TattooShopTestCase(unittest.TestCase):
     # This class represents the tattoo test case

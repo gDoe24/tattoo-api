@@ -5,9 +5,11 @@ from flask_migrate import Migrate
 from datetime import datetime
 import json
 
+database_path = os.environ.get('DATABASE_URL')
 
-database_name = "tattoo_shop"
-database_path = f"postgres://{'localhost:5432'}/{database_name}"
+if not database_path:
+    database_name = "tattoo_shop"
+    database_path = f"postgres://{'localhost:5432'}/{database_name}"
 
 db = SQLAlchemy()
 
