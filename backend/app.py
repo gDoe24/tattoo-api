@@ -4,8 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from datetime import datetime
 import json
-from models import setup_db, Artist, Client, Appointment
-from auth.auth import requires_auth, AuthError
+from .models import setup_db, Artist, Client, Appointment
+from .auth.auth import requires_auth, AuthError
 
 
 '''
