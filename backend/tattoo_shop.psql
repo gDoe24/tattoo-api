@@ -24,128 +24,25 @@ SET default_with_oids = false;
 -- Name: artists; Type: TABLE; Schema: public;
 --
 
-DROP DATABASE tattoo_shop;
-CREATE DATABASE tattoo_shop;
 \c tattoo_shop;
 
-CREATE TABLE public.artists (
-    id integer NOT NULL,
-    name text NOT NULL,
-    phone text,
-    styles text,
-    image_link text NULL,
-    instagram_link text NULL,
-    email text NULL
-);
 
 ALTER TABLE public.artists OWNER TO postgres;
-
---
--- Name: artists_id_seq; Type: SEQUENCE; Schema: public;
---
-
-CREATE SEQUENCE public.artists_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-ALTER TABLE public.artists_id_seq OWNER TO postgres;
-
---
--- Name: artists_id_seq; Type: SEQUENCE OWNED BY; Schema: public;
---
-
-ALTER SEQUENCE public.artists_id_seq OWNED BY public.artists.id;
 
 --
 -- Name: clients; Type: TABLE; Schema: public;
 --
 
-CREATE TABLE public.clients (
-    id integer NOT NULL,
-    name text NOT NULL,
-    email text NULL,
-    phone text,
-    address text
-);
+ALTER TABLE public.clients OWNER TO postgres;=
 
-
-ALTER TABLE public.clients OWNER TO postgres;
-
---
--- Name: clients_id_seq; Type: SEQUENCE; Schema: public;
---
-
-CREATE SEQUENCE public.clients_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-ALTER TABLE public.clients_id_seq OWNER TO postgres;
-
-
---
--- Name: clients_id_seq; Type: SEQUENCE OWNED BY; Schema: public;
---
-
-ALTER SEQUENCE public.clients_id_seq OWNED BY public.clients.id;
 
 --
 -- Name: appointment; Type TABLE; Schema: public;
 --
 
-CREATE TABLE public.appointment (
-    id integer NOT NULL,
-    artist integer,
-    client integer,
-    appointment_date timestamp NOT NULL
-);
 
 ALTER TABLE public.appointment OWNER TO postgres;
 
---
--- Name: appointment_id_seq; Type: SEQUENCE; Schema: public;
---
-
-CREATE SEQUENCE public.appointment_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-ALTER TABLE public.appointment_id_seq OWNER TO postgres;
-
-
---
--- Name: artists id; Type: DEFAULT; Schema: public;
---
-
-ALTER TABLE ONLY public.artists ALTER COLUMN id SET DEFAULT nextval('public.artists_id_seq'::regclass);
-
-
---
--- Name: clients id; Type: DEFAULT; Schema: public; Owner: caryn
---
-
-ALTER TABLE ONLY public.clients ALTER COLUMN id SET DEFAULT nextval('public.clients_id_seq'::regclass);
-
---
--- Name: clients id; Type: DEFAULT; Schema: public; Owner: caryn
---
-
-ALTER TABLE ONLY public.appointment ALTER COLUMN id SET DEFAULT nextval('public.appointment_id_seq'::regclass);
-
---
--- Data for Name: artists; Type: TABLE DATA; Schema: public;
---
 
 COPY public.artists (id, name, phone, styles, image_link, instagram_link, email) FROM stdin;
 1	Kobe	123-432-4231	Neo	NULL	NULL	kobe@aol.com
@@ -168,56 +65,6 @@ COPY public.appointment (id, artist, client, appointment_date) FROM stdin;
 3	3	2	2021-08-09 11:00:00
 4	3	4	2021-01-01 12:00:00
 \.
-
---
--- Name: artists_id_seq; Type: SEQUENCE SET; Schema: public;
---
-
-SELECT pg_catalog.setval('public.artists_id_seq', 4, true);
-
---
--- Name: clients_id_seq; Type: SEQUENCE SET; Schema: public;
---
-
-SELECT pg_catalog.setval('public.clients_id_seq', 5, true);
-
---
--- Name: appointment_id_seq; Type: SEQUENCE SET; Schema: public;
---
-
-SELECT pg_catalog.setval('public.appointment_id_seq', 4, true);
-
---
--- Name: artists artists_pkey; Type: CONSTRAINT; Schema: public;
---
-
-ALTER TABLE ONLY public.artists
-    ADD CONSTRAINT artists_pkey PRIMARY KEY (id);
-
---
--- Name: clients clients_pkey; Type: CONSTRAINT; Schema: public;
---
-
-ALTER TABLE ONLY public.clients
-    ADD CONSTRAINT clients_pkey PRIMARY KEY (id);
-
---
--- Name: appointment appointment_pkey; Type: CONSTRAINT; Schema: public;
---
-
-ALTER TABLE ONLY public.appointment
-    ADD CONSTRAINT appointment_pkey PRIMARY KEY (id);
-
---
--- Name: clients category; Type: FK CONSTRAINT; Schema: public;
---
-
-ALTER TABLE ONLY public.appointment
-    ADD CONSTRAINT artist FOREIGN KEY (artist) REFERENCES public.artists(id) ON UPDATE CASCADE ON DELETE SET NULL;
-
-ALTER TABLE ONLY public.appointment
-    ADD CONSTRAINT client FOREIGN KEY (client) REFERENCES public.clients(id) ON UPDATE CASCADE ON DELETE SET NULL;
-
 
 --
 -- PostgreSQL database dump complete
