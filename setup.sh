@@ -3,7 +3,7 @@ export DATABASE_URL="postgres://nhqhcrxoyceyrr:89f89cd3278ff899ea68f23f06a8905a4
 
 # Auth0 variables
 export AUTH0_DOMAIN='fsnd-8.us.auth0.com'
-export ALGORITHMS=['RS256']
+export ALGORITHMS='RS256'
 export API_AUDIENCE='https://tattoo-api'
 export AUTH0_CALLBACK_URL='https://tattoo-shop-api.herokuapp.com/'
 
