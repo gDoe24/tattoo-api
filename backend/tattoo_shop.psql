@@ -33,7 +33,7 @@ ALTER TABLE public.artists OWNER TO postgres;
 -- Name: clients; Type: TABLE; Schema: public;
 --
 
-ALTER TABLE public.clients OWNER TO postgres;=
+ALTER TABLE public.clients OWNER TO postgres;
 
 
 --

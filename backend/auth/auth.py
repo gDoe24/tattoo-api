@@ -6,9 +6,9 @@ from functools import wraps
 from jose import jwt
 from urllib.request import urlopen
 
-AUTH0_DOMAIN = os.environ.get("AUTH0_DOMAIN")
-ALGORITHMS = os.environ.get("ALGORITHMS")
-API_AUDIENCE = os.environ.get("API_AUDIENCE")
+AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN')
+ALGORITHMS = os.environ.get('ALGORITHMS')
+API_AUDIENCE = os.environ.get('API_AUDIENCE')
 
 # AuthError Exception
 '''
@@ -106,7 +106,6 @@ def verify_decode_jwt(token):
                 audience=API_AUDIENCE,
                 issuer='https://' + AUTH0_DOMAIN + '/'
             )
-
             return payload
 
         except jwt.ExpiredSignatureError:

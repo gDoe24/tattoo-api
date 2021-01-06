@@ -9,7 +9,7 @@ database_path = os.environ.get('DATABASE_URL')
 
 if not database_path:
     database_name = "tattoo_shop"
-    database_path = f"postgres://{'localhost:5432'}/{database_name}"
+    database_path = f"postgres://localhost:5432/{database_name}"
 
 db = SQLAlchemy()
 
