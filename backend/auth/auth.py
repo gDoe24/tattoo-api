@@ -6,9 +6,9 @@ from functools import wraps
 from jose import jwt
 from urllib.request import urlopen
 
-AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN', 'fsnd-8.auth0.com')
-ALGORITHMS = [os.environ.get('ALGORITHMS'), 'RSA256']
-API_AUDIENCE = os.environ.get('API_AUDIENCE', 'https://tattoo-api')
+AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN')
+ALGORITHMS = [os.environ.get('ALGORITHMS')]
+API_AUDIENCE = os.environ.get('API_AUDIENCE')
 
 # AuthError Exception
 '''
@@ -34,7 +34,7 @@ def get_token_auth_header():
     if not auth:
         raise AuthError({
                         'code': 'authorization_header_missing',
-                        'description': 'Authoriation header not found'
+                        'description': 'Authorization header not found'
                         }, 401)
 
     header_parts = auth.split(' ')
@@ -140,10 +140,7 @@ def requires_auth(permission=''):
         @wraps(f)
         def wrapper(*args, **kwargs):
             token = get_token_auth_header()
-            try:
-                payload = verify_decode_jwt(token)
-            except:
-                abort(401)
+            payload = verify_decode_jwt(token)
             check_permissions(permission, payload)
             return f(payload, *args, **kwargs)
 
