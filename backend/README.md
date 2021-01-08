@@ -59,7 +59,7 @@ Setting the `FLASK_APP` variable to `flaskr` directs flask to use the `flaskr` d
 
 ### Getting Started
 
-BASE URL: The backend is hosted at the default URL, http://127.0.0.1:5000
+BASE URL: The backend is hosted at the default URL, https://bookthattat.herokuapp.com/
 
 ### Authorization
 
@@ -110,7 +110,7 @@ The API recognizes three error types for failed requests:
 #### GET /
 
 *   Returns "Healthy" if the api is up and running properly
-*   curl http://127.0.0.1:5000/
+*   curl https://bookthattat.herokuapp.com/
 
 ```
 {
@@ -161,7 +161,7 @@ This is an object representing a tattoo artist. This API allows you to retrieve 
 
 *   Retrieves all artists in the database
 *   Returns an array of artist objects and the total number of artists in the database
-`curl http://127.0.0.1:5000/api/artists`
+`curl https://bookthattat.herokuapp.com/api/artists`
 
 Returns:
 ```
@@ -195,7 +195,7 @@ Returns:
 *   Fetches the artist resource matching the artist_id specified in the URI
 *   Returns: a single artist object
 
-`curl http://127.0.0.1:5000/api/artists/2`
+`curl https://bookthattat.herokuapp.com/api/artists/2`
 
 Returns:
 ```
@@ -224,7 +224,7 @@ Returns:
     *   image_link
 
 ```
-curl http://127.0.0.1:5000/api/artists -X POST \
+curl https://bookthattat.herokuapp.com/api/artists -X POST \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer $MANAGER_JWT" \
 -d '{ "name": "Tony Montana", "phone": "123-456-7891", "styles": "Neo-Traditional", \
@@ -260,7 +260,7 @@ Returns:
     *   image_link
 
 ```
-curl http://127.0.0.1:5000/api/artists/3 -X PATCH \
+curl https://bookthattat.herokuapp.com/api/artists/3 -X PATCH \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer $MANAGER_JWT" \
 -d '{"phone": "901-212-4321", "email": "creative_genius@aol.com"}'
@@ -287,7 +287,7 @@ Returns
 *   Delete an existing artist from the database specified by the artist_id in the URI. This action also deletes any existing appointments the tattoo artist had scheduled
 
 ```
-curl http://127.0.0.1:5000/api/artists/3 -X DELETE \
+curl https://bookthattat.herokuapp.com/api/artists/3 -X DELETE \
 -H "Authorization: Bearer $MANAGER_JWT" 
 ```
 
@@ -337,7 +337,7 @@ This object represents a client in the tattoo shop's database. The API allows fo
 *   Returns an array of client objects for all clients in the database and the total number of clients
 
 ```
-curl http://127.0.0.1:5000/api/clients \
+curl https://bookthattat.herokuapp.com/api/clients \
 -H "Authorization: Bearer $MANAGER_JWT"
 ```
 
@@ -370,7 +370,7 @@ Returns:
 *   Returns respective client object
 
 ```
-curl http://127.0.0.1:5000/api/clients/1 \
+curl https://bookthattat.herokuapp.com/api/clients/1 \
 -H "Authorization: Bearer $MANAGER_JWT"
 ```
 
@@ -393,7 +393,7 @@ Returns:
 *   Returns the newly created client object and the total number of clients now in the database
 
 ```
-curl http://127.0.0.1:5000/api/clients \
+curl https://bookthattat.herokuapp.com/api/clients \
 -H "Authorization: Bearer $MANAGER_JWT" \
 -H "Content-Type: application/json" \
 -d '{ "name": "Joe Schmo", "phone": "231-124-1412", "email": "", "address": ""}
@@ -419,7 +419,7 @@ Returns:
 *   Returns the updated client object
 
 ```
-curl http://127.0.0.1:5000/api/clients/3 \
+curl https://bookthattat.herokuapp.com/api/clients/3 \
 -H "Authorization: Bearer $MANAGER_JWT" \
 -H "Content-Type: application/json" \
 -d '{"phone": "770-231-4234", "email": "simplord12@gmail.com"}
@@ -444,7 +444,7 @@ Returns:
 *   Returns the deleted client's id along with the total number of clients remaining in the database
 
 ```
-curl curl http://127.0.0.1:5000/api/clients/6 \
+curl curl https://bookthattat.herokuapp.com/api/clients/6 \
 -H "Authorization: Bearer $MANAGER_JWT"
 ```
 
@@ -491,7 +491,7 @@ Tattoo artists and clients use the appointment object to set a date and time for
 *   Returns the respective appointment object
 
 ```
-curl http://127.0.0.1:5000/api/appointments/id \
+curl https://bookthattat.herokuapp.com/api/appointments/id \
 -H 'Authorization: Bearer $MANAGER_JWT'
 ```
 
@@ -515,7 +515,7 @@ Returns:
 *   Returns the newly created appointment object and the total number of upcoming appointments
 
 ```
-curl http://127.0.0.1:5000/api/appointments -X POST \
+curl https://bookthattat.herokuapp.com/api/appointments -X POST \
 -H 'Authorization: Bearer $MANAGER_JWT' \
 -H 'Content-Type: application/json' \
 -d '{"client": 1, "artist": 1, "appointment_date": "Mon, 06 Mar 2021 14:30:00 GMT"}'
@@ -542,7 +542,7 @@ Returns
 *   Returns the appointment object
 
 ```
-curl http://127.0.0.1:5000/api/appointments/3 -X PATCH \
+curl https://bookthattat.herokuapp.com/api/appointments/3 -X PATCH \
 -H 'Authorization: Bearer $MANAGER_JWT' \
 -H 'Content-Type: application/json' \
 -d '{ "appointment_date": "Sat, 06 Jun 2021 14:30:00 GMT" }'
@@ -568,7 +568,7 @@ Returns:
 *   Returns the id of the deleted appointment along with the total number of upcoming appointments
 
 ```
-curl http://127.0.0.1:5000/api/appointments/3 -X DELETE \
+curl https://bookthattat.herokuapp.com/api/appointments/3 -X DELETE \
 -H 'Authorization: Bearer $MANAGER_JWT'
 ```
 
